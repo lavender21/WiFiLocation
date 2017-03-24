@@ -15,37 +15,56 @@
         android:text="发送请求"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_marginStart="14dp"
-        android:layout_marginTop="27dp"
-        android:id="@+id/button" />
+        android:id="@+id/button"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:text="搜索wifi信号强度"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
         android:id="@+id/btnStartWifi"
-        android:layout_below="@+id/button"
-        android:layout_alignStart="@+id/button" />
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/button" />
 
     <Button
         android:text="停止搜索"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnStopWifi"
-        android:layout_alignBaseline="@+id/btnStartWifi"
-        android:layout_alignBottom="@+id/btnStartWifi"
-        android:layout_toEndOf="@+id/btnStartWifi"
-        android:layout_marginStart="72dp" />
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/btnStartWifi" />
 
-    <TextView
-        android:text="TextView"
+    <Button
+        android:text="进入传感器测试"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:id="@+id/textView"
+        android:id="@+id/btnStartCoord"
+        android:layout_below="@+id/button"
+        android:layout_alignStart="@+id/button" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/btnStartCoord">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:id="@+id/textView"/>
+    </ScrollView>
+
+    <Button
+        android:text="关闭传感器"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnStopCoord"
         android:layout_below="@+id/btnStartWifi"
-        android:layout_alignStart="@+id/btnStartWifi"
-        android:layout_alignEnd="@+id/btnStopWifi" />
+        android:layout_toEndOf="@+id/btnStartCoord" />
+
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.example.lavender.wifilocation;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
@@ -20,13 +21,19 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    public static Button button, btnStartWifi,btnStopWifi;
-    private static TextView showRssi;
+    public static Button button, btnStartWifi,btnStopWifi,btnStartCoord,btnStopCoord;
+    public static TextView showRssi;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            ArrayList<String> data = intent.getStringArrayListExtra("wifiList");
-            showRssi.setText(data.toString());
+            ArrayList<String> wifidata = intent.getStringArrayListExtra("wifiList");
+            String model = intent.getStringExtra("mobleModel");
+            String txt = "wifi信号强度列表：\n"+wifidata;
+            txt += "\n当前手机型号:"+model;
+            String sensordata = intent.getStringExtra("accValue");
+            String sensordata2 = intent.getStringExtra("magnValue");
+            txt +="\n\n当前传感器数据：\n"+sensordata+"\n"+sensordata2;
+            showRssi.setText(txt);
         }
     };
     @Override
@@ -34,7 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
-
+        // 注册对象，并添加接收数据的action;
+        registerReceiver(receiver, new IntentFilter("wifiData"));
+        registerReceiver(receiver, new IntentFilter("sensorData"));
     }
 
 
@@ -47,11 +56,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnStopWifi = (Button)findViewById(R.id.btnStopWifi);
         btnStopWifi.setOnClickListener(this);
         showRssi = (TextView)findViewById(R.id.textView);
+        btnStartCoord = (Button)findViewById(R.id.btnStartCoord);
+        btnStartCoord.setOnClickListener(this);
+        btnStopCoord = (Button)findViewById(R.id.btnStopCoord);
+        btnStopCoord.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(MainActivity.this, GetRSSIService.class);
+        Intent intentWifi = new Intent(MainActivity.this, GetRSSIService.class);
+//        Intent intentSensor = new Intent(MainActivity.this,GetCoordService.class);
         switch (v.getId()){
             // 测试http链接
             case R.id.button:
@@ -59,11 +73,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             // 开启获取wifi信号强度
             case R.id.btnStartWifi:
-                startService(intent);
+                startService(intentWifi);
                 break;
             // 关闭获取wifi信号强度
             case R.id.btnStopWifi:
-                stopService(intent);
+                stopService(intentWifi);
+                break;
+            // 进入传感器测试
+            case R.id.btnStartCoord:
+                  Intent intentSensor = new Intent(MainActivity.this, SensorTestActivity.class);
+                  startActivity(intentSensor);
+//                startService(intentSensor);
+                break;
+            // 关闭传感器
+            case R.id.btnStopCoord:
+//                stopService(intentSensor);
                 break;
         }
     }

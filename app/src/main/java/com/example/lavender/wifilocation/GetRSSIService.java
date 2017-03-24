@@ -3,6 +3,7 @@ package com.example.lavender.wifilocation;
 import android.app.Service;
 import android.content.Intent;
 import android.net.wifi.WifiInfo;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.net.wifi.ScanResult;
@@ -11,29 +12,20 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/*这个服务用来获取wifi信号列表，并对信号进行滤波，聚类进行优化处理。最终得到一组准确度高的信号强度列表。*/
 
 public class GetRSSIService extends Service {
     private WifiManager wifiManager;
-    private WifiInfo wifinfo;
     private Timer timer;
     @Override
     public void onCreate() {
         super.onCreate();
         MainActivity.btnStartWifi.setEnabled(false);
-        getWifiRssi();
         Toast.makeText(this,"开始扫描信号强度",Toast.LENGTH_SHORT).show();
     }
 
@@ -69,7 +61,7 @@ public class GetRSSIService extends Service {
                 getWifiRssi();
             }
         };
-        timer.schedule(task,1000,5000);
+        timer.schedule(task,1000,3000);
     }
 
     // 停止计时器
@@ -84,37 +76,21 @@ public class GetRSSIService extends Service {
             wifiManager.setWifiEnabled(true);
         }
         Log.i("WIFI","get wifiManager");
-        wifinfo = wifiManager.getConnectionInfo();
         // 获取到周围的wifi列表
         List<ScanResult> scanResults = wifiManager.getScanResults();
         Log.i("WIFI","get scanResults");
-        // 用JSON存储
-       /* JSONArray wifiList = new JSONArray();
-        for (ScanResult scanResult : scanResults){
-            JSONObject json = new JSONObject();
-            try{
-                json.put("name",scanResult.SSID);
-                json.put("rssi",scanResult.level);
-                Log.i("WIFI","get SSID　level");
-            }catch (JSONException e){
-                e.printStackTrace();
-            }
-            wifiList.put(json);
-        }*/
         ArrayList<String>  wifiList = new ArrayList<String>();
         for (ScanResult scanResult : scanResults){
-            String str = "{\"name\":"+scanResult.SSID+",\"rssi\":"+scanResult.level+"}";
+            String str = "{\"name\":"+scanResult.SSID+
+                    "\"mac\":"+scanResult.BSSID+",\"rssi\":"+scanResult.level+"}";
             wifiList.add(str);
         }
-
         Intent intent = new Intent();
         intent.setAction("wifiData");
         intent.putStringArrayListExtra("wifiList",wifiList);
+        intent.putExtra("mobileModel", Build.MODEL);
+        sendBroadcast(intent);
         Log.i("WIFI","get intent");
 }
-    public class WifiInfomation{
-        private String SSID;
-        private String rssi;
-    }
 
 }
