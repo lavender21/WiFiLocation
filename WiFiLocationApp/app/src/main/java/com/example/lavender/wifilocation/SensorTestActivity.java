@@ -34,9 +34,10 @@ public class SensorTestActivity extends AppCompatActivity implements View.OnClic
             float degree = intent.getFloatExtra("degree",0);
             int xlen = intent.getIntExtra("xlen",0);
             int ylen = intent.getIntExtra("ylen",0);
-            txt += "coordThis:["+coordThis[0] + "," + coordThis[1] + "," + coordThis[2]+
+           /* txt += "coordThis:["+coordThis[0] + "," + coordThis[1] + "," + coordThis[2]+
                     "]coordPre:["+coordPre[0] + "," + coordPre[1] + "," + coordPre[2]+
-                    "xlen:"+xlen+",ylen:"+ylen+",degree:"+degree+"\n";
+                    "xlen:"+xlen+",ylen:"+ylen+",degree:"+degree+"\n";*/
+            txt += "["+coordThis[0] + "," + coordThis[1] + "," + coordThis[2] + "]\n";
             showSenserData.setText(txt);
         }
     };
