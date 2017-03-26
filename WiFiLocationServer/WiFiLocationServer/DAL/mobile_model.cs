@@ -34,8 +34,7 @@ namespace WiFiLocationServer.DAL
         /// 增加一条数据
         /// </summary>
         public int Add(Models.mobile_model model)
-        {
-            
+        {           
             StringBuilder strSql = new StringBuilder();
             strSql.Append("insert into tb_mobile_model(model_name)");
             strSql.Append(" values (@model_name)");
