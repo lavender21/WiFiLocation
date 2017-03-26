@@ -158,5 +158,7 @@ __pycache__/
 *.xsd.cs
 
 # my project ignore files
+**/obj/Debug/*
 **/obj/*
 **/bin/*
+*.csproj
