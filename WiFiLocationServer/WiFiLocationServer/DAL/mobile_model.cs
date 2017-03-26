@@ -35,18 +35,16 @@ namespace WiFiLocationServer.DAL
         /// </summary>
         public int Add(Models.mobile_model model)
         {
-            using (SqlConnection conn = new SqlConnection(DbHelperSQL.connectionString))
-            {
-                conn.Open();
-                StringBuilder strSql = new StringBuilder();
-                strSql.Append("insert into tb_mobile_model(model_name)");
-                strSql.Append(" values (@model_name)");
-                SqlParameter[] parameters = {
-                        new SqlParameter("@model_name", SqlDbType.VarChar,50)};
-                parameters[0].Value = model.model_name;
+            
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into tb_mobile_model(model_name)");
+            strSql.Append(" values (@model_name)");
+            SqlParameter[] parameters = {
+                    new SqlParameter("@model_name", SqlDbType.VarChar,50)};
+            parameters[0].Value = model.model_name;
 
-                object obj = DbHelperSQL.ExecuteSql(strSql.ToString(),parameters); //带事务
-                model.id = Convert.ToInt32(obj);
+            object obj = DbHelperSQL.ExecuteSql(strSql.ToString(),parameters); 
+            model.id = Convert.ToInt32(obj);
 
             return model.id;
         }
@@ -56,24 +54,7 @@ namespace WiFiLocationServer.DAL
         /// </summary>
         public bool Update(Models.mobile_model model)
         {
-            using (SqlConnection conn = new SqlConnection(DbHelperSQL.connectionString))
-            {
-                conn.Open();
-                using (SqlTransaction trans = conn.BeginTransaction())
-                {
-                    try
-                    {
-                        StringBuilder strSql = new StringBuilder();
-
-                        trans.Commit();
-                    }
-                    catch
-                    {
-                        trans.Rollback();
-                        return false;
-                    }
-                }
-            }
+         
             return true;
         }
 
@@ -82,7 +63,6 @@ namespace WiFiLocationServer.DAL
         /// </summary>
         public bool Delete(int id)
         {
-
 
             StringBuilder strSql = new StringBuilder();
             strSql.Append("delete from tb_mobile_model ");
