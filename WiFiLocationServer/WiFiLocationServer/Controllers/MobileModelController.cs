@@ -5,13 +5,13 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
-using WiFiLocationServer.DAL;
+using WiFiLocationServer.DB;
 
 namespace WiFiLocationServer.Controllers
 {
     public class MobileModelController : ApiController
     {
-        DAL.mobile_model dal = new mobile_model();
+        DB.mobile_model db = new mobile_model();
         // GET api/values
         public IEnumerable<Models.mobile_model> GetAllList()
         {
@@ -23,7 +23,7 @@ namespace WiFiLocationServer.Controllers
         [HttpGet]
         public Models.mobile_model GetById(int id)
         {
-            Models.mobile_model model = dal.GetModel(id);
+            Models.mobile_model model = db.GetModel(id);
             return model;
         }
 
@@ -31,12 +31,12 @@ namespace WiFiLocationServer.Controllers
         [HttpPost]
         public HttpResponseMessage Post([FromBody]Models.mobile_model value)
         {
-            int addId = dal.Add(value);
+            int addId = db.Add(value);
             var response = Request.CreateResponse();
             if (addId > 0)
             {
                 response = Request.CreateResponse(HttpStatusCode.OK);
-                response.Content = new StringContent(addId+"",Encoding.Unicode);
+                response.Content = new StringContent("添加成功！",Encoding.Unicode);
                 return response;
             }
             else

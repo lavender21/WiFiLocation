@@ -176,13 +176,16 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\DataTestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MobileModelController.cs" />
-    <Compile Include="DAL\mobile_model.cs" />
-    <Compile Include="DbConnect\DbHelperSQL.cs" />
+    <Compile Include="DB\DbHelperSQL.cs" />
+    <Compile Include="DB\data_test.cs" />
+    <Compile Include="DB\mobile_model.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\data_test.cs" />
     <Compile Include="Models\mobile_model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
