@@ -28,9 +28,11 @@ import java.util.Iterator;
 public class HttpConnect extends AsyncTask<String,String,String> {
     // 服务器端IP地址
     public static final String BASE_URL="http://10.101.102.253:8080";
+//    public static final String BASE_URL = "https://www.baidu.com/";
     public static final String TAG = "HttpConnect";
     public static final String UTF_8 = "UTF-8";
-    public static final String APITEST = "/api/student";
+    public static final String APITEST = "/api/DataTest/1";
+    public static final String APIPOSTTEST = "/api/DataTest/";
 
     @Override
     protected void onPreExecute() {
@@ -39,6 +41,7 @@ public class HttpConnect extends AsyncTask<String,String,String> {
 
     @Override
     protected void onPostExecute(String s) {
+        MainActivity.showRssi.setText(s);
         super.onPostExecute(s);
     }
 
@@ -66,7 +69,7 @@ public class HttpConnect extends AsyncTask<String,String,String> {
                 getData = HttpGet(url,data);
                 break;
             case "POST":
-                temp = HttpPost(url,data);
+                getData = HttpPost(url,data);
                 break;
             case "DELETE":
                 temp = HttpDelete(url);
@@ -74,14 +77,6 @@ public class HttpConnect extends AsyncTask<String,String,String> {
             case  "PUT":
                 temp = HttpPut(url);
                 break;
-        }
-        if (temp)
-        {
-            getData = "True";
-        }
-        else
-        {
-            getData = "False";
         }
         return getData;
     }
@@ -93,6 +88,7 @@ public class HttpConnect extends AsyncTask<String,String,String> {
         StringBuilder response = new StringBuilder();
         // 在url上添加get的参数
         String urlData = JsonToString_url(data);
+
         if (urlData != "")
         {
             url += "?"+urlData;
@@ -133,7 +129,7 @@ public class HttpConnect extends AsyncTask<String,String,String> {
     }
 
     // post
-    public boolean HttpPost(String url, JSONObject data){
+    public String HttpPost(String url, JSONObject data){
         // 发送请求
         HttpURLConnection httpURLConnection = null;
         StringBuilder response = new StringBuilder();
@@ -142,7 +138,7 @@ public class HttpConnect extends AsyncTask<String,String,String> {
             Log.i(TAG,"new url");
             URL myurl = new URL(url);
             httpURLConnection = (HttpURLConnection)myurl.openConnection();
-            httpURLConnection.setRequestMethod("GET");
+            httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setReadTimeout(8000);
             httpURLConnection.setConnectTimeout(8000);
 
@@ -179,7 +175,7 @@ public class HttpConnect extends AsyncTask<String,String,String> {
                 httpURLConnection.disconnect();
             }
         }
-        return status;
+        return response.toString();
     }
 
     // delete
@@ -195,6 +191,10 @@ public class HttpConnect extends AsyncTask<String,String,String> {
     //    解析json，获取键值对 转换成get的参数
     public String JsonToString_url(JSONObject jsonObject){
         String response = "";
+        if (!jsonObject.keys().hasNext())
+        {
+            return "";
+        }
         Iterator keys = jsonObject.keys();
         while(keys.hasNext()){
             try{

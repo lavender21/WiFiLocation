@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    public static Button button, btnStartWifi,btnStopWifi,btnStartCoord,btnStopCoord;
+    public static Button btnStartWifi,btnStopWifi,btnStartCoord,btnStopCoord,btnGet,btnPost;
     public static TextView showRssi;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -49,8 +49,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void init(){
-        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(this);
+        btnGet = (Button) findViewById(R.id.btnGet);
+        btnGet.setOnClickListener(this);
+        btnPost = (Button)findViewById(R.id.btnPost);
+        btnPost.setOnClickListener(this);
         btnStartWifi = (Button)findViewById(R.id.btnStartWifi);
         btnStartWifi.setOnClickListener(this);
         btnStopWifi = (Button)findViewById(R.id.btnStopWifi);
@@ -68,8 +70,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        Intent intentSensor = new Intent(MainActivity.this,GetCoordService.class);
         switch (v.getId()){
             // 测试http链接
-            case R.id.button:
-                httpRequest();
+            case R.id.btnGet:
+                httpRequestGet();
+                break;
+            // 测试http连接
+            case R.id.btnPost:
+                httpRequestPost();
                 break;
             // 开启获取wifi信号强度
             case R.id.btnStartWifi:
@@ -93,16 +99,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     // http请求;
-    public void httpRequest()
+    public void httpRequestGet()
+    {
+        HttpConnect httpConnect = new HttpConnect();
+        httpConnect.execute("GET",HttpConnect.APITEST,"");
+    }
+    public void httpRequestPost()
     {
         JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("lastname","zaizai");
+        try{
+            jsonObject.put("coord","[12,34],[23,12],[24,12]");
+            jsonObject.put("memory","android app 发送 http post请求测试");
+            jsonObject.put("flag","0");
         }catch (JSONException e){
-            e.printStackTrace();
+            e.printStackTrace();;
         }
         HttpConnect httpConnect = new HttpConnect();
-        httpConnect.execute("GET", HttpConnect.APITEST, jsonObject.toString());
+        httpConnect.execute("POST", httpConnect.APIPOSTTEST,jsonObject.toString());
     }
 }
 
