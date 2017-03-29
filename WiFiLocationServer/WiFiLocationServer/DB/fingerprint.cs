@@ -47,7 +47,7 @@ namespace WiFiLocationServer.DB
             parameters[2].Value = model.flag;
             parameters[3].Value = model.addtime;
 
-            object obj = DbHelperSQL.ExecuteSql(strSql.ToString(),parameters); 
+            object obj = DbHelperSQL.GetSingle(strSql.ToString(),parameters); 
             model.id = Convert.ToInt32(obj);
 
             return model.id;
