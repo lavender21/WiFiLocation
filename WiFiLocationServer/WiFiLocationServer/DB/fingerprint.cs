@@ -10,7 +10,7 @@ namespace WiFiLocationServer.DB
     /// <summary>
     /// 数据访问类:手机型号表
     /// </summary>
-    public class data_test
+    public class fingerprint
     {
         #region 公用方法=================================
         /// <summary>
@@ -19,7 +19,7 @@ namespace WiFiLocationServer.DB
         public bool Exists(int id)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select count(1) from tb_sensor_wifi_test");
+            strSql.Append("select count(1) from tb_wifi_fingerprint");
             strSql.Append(" where id=@id ");
             SqlParameter[] parameters = {
                     new SqlParameter("@id", SqlDbType.Int,4)};
@@ -32,22 +32,20 @@ namespace WiFiLocationServer.DB
         /// <summary>
         /// 增加一条数据
         /// </summary>
-        public int Add(Models.data_test model)
+        public int Add(Models.Fingerprint model)
         {           
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into tb_sensor_wifi_test(coord,memory,addtime,rssi,flag)");
-            strSql.Append(" values (@coord,@memory,@addtime,@rssi,@flag)");
+            strSql.Append("insert into tb_wifi_fingerprint(coord,memory,flag,addtime)");
+            strSql.Append(" values (@coord,@memory,@flag,@addtime);select @@IDENTITY");
             SqlParameter[] parameters = {
-                    new SqlParameter("@coord", SqlDbType.VarChar),
+                    new SqlParameter("@coord", SqlDbType.VarChar,10),
                     new SqlParameter("@memory", SqlDbType.VarChar),
-                    new SqlParameter("@addtime", SqlDbType.VarChar,50),
-                    new SqlParameter("@rssi", SqlDbType.Int,4),
-                    new SqlParameter("@flag", SqlDbType.Int,4)};
+                    new SqlParameter("@flag", SqlDbType.Int),
+                    new SqlParameter("@addtime", SqlDbType.VarChar,50)};
             parameters[0].Value = model.coord;
             parameters[1].Value = model.memory;
-            parameters[2].Value = model.addtime;
-            parameters[3].Value = model.rssi;
-            parameters[4].Value = model.flag;
+            parameters[2].Value = model.flag;
+            parameters[3].Value = model.addtime;
 
             object obj = DbHelperSQL.ExecuteSql(strSql.ToString(),parameters); 
             model.id = Convert.ToInt32(obj);
@@ -58,7 +56,7 @@ namespace WiFiLocationServer.DB
         /// <summary>
         /// 更新一条数据
         /// </summary>
-        public bool Update(Models.data_test model)
+        public bool Update(Models.Fingerprint model)
         {
          
             return true;
@@ -71,7 +69,7 @@ namespace WiFiLocationServer.DB
         {
 
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("delete from tb_sensor_wifi_test ");
+            strSql.Append("delete from tb_wifi_fingerprint ");
             strSql.Append(" where id=@id");
             SqlParameter[] parameters = {
                     new SqlParameter("@id", SqlDbType.Int,4)};
@@ -91,17 +89,17 @@ namespace WiFiLocationServer.DB
         /// <summary>
         /// 得到一个对象实体
         /// </summary>
-        public Models.data_test GetModel(int id)
+        public Models.Fingerprint GetModel(int id)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select top 1 id,coord,memory,addtime,rssi,flag");
-            strSql.Append(" from tb_sensor_wifi_test");
+            strSql.Append("select top 1 id,coord,memory,flag,addtime");
+            strSql.Append(" from tb_wifi_fingerprint");
             strSql.Append(" where id=@id");
             SqlParameter[] parameters = {
                     new SqlParameter("@id", SqlDbType.Int,4)};
             parameters[0].Value = id;
 
-            Models.data_test model = new Models.data_test();
+            Models.Fingerprint model = new Models.Fingerprint();
             DataSet ds = DbHelperSQL.Query(strSql.ToString(), parameters);
             if (ds.Tables[0].Rows.Count > 0)
             {
@@ -120,9 +118,9 @@ namespace WiFiLocationServer.DB
         ///<summary>
         /// 将对象转换为实体
         /// </summary>
-        private Models.data_test DataRowToModel(DataRow row)
+        private Models.Fingerprint DataRowToModel(DataRow row)
         {
-            Models.data_test model = new Models.data_test();
+            Models.Fingerprint model = new Models.Fingerprint();
             if (row != null)
             {
                 if (row["id"] != null && row["id"].ToString() != "")
@@ -133,6 +131,10 @@ namespace WiFiLocationServer.DB
                 {
                     model.coord = row["coord"].ToString();
                 }
+                if (row["flag"] != null && row["flag"].ToString() != "")
+                {
+                    model.flag = Int32.Parse(row["flag"].ToString());
+                }
                 if (row["memory"] != null && row["memory"].ToString() != "")
                 {
                     model.memory = row["memory"].ToString();
@@ -141,15 +143,6 @@ namespace WiFiLocationServer.DB
                 {
                     model.addtime = row["addtime"].ToString();
                 }
-                if (row["rssi"] != null && row["rssi"].ToString() != "")
-                {
-                    model.rssi = Int32.Parse(row["rssi"].ToString());
-                }
-                if (row["flag"] != null && row["flag"].ToString() != "")
-                {
-                    model.flag = Int32.Parse(row["flag"].ToString());
-                }
-
             }
             return model;
         }

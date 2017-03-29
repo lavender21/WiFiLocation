@@ -37,17 +37,18 @@ namespace WiFiLocationServer.Controllers
         public HttpResponseMessage Post([FromBody]Models.data_test model)
         {
             var response = Request.CreateResponse();
+            
             if (model != null)
             {
                 if (db.Add(model) > 0)
                 {
                     response = Request.CreateResponse(HttpStatusCode.OK);
-                    response.Content = new StringContent("{\"message\":\"添加成功\"}", Encoding.Unicode);
+                    response.Content = new StringContent("{\"message\":\"添加成功\"}", Encoding.UTF8);
                 }
                 else
                 {
                     response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-                    response.Content = new StringContent("{\"message\":\"发生未知错误\"}", Encoding.Unicode);
+                    response.Content = new StringContent("{\"message\":\"发生未知错误\"}", Encoding.UTF8);
                 }
             }
             else
