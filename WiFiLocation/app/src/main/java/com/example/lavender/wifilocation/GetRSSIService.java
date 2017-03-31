@@ -22,13 +22,20 @@ public class GetRSSIService extends Service {
     private WifiManager wifiManager;
     private Timer timer;
     // 存储获取的信号强度列表
-    public static ArrayList<WifiRssi> wifiList = new ArrayList<WifiRssi>();
+    public ArrayList<WifiRssi> wifiList = new ArrayList<WifiRssi>();
     // 存储已经采集的ap的mac地址列表
     public ArrayList<String> wifiMacList = new ArrayList<String>();
+    // 发送至服务器的数据
+    public JSONObject sendToServerData = new JSONObject();
     @Override
     public void onCreate() {
         super.onCreate();
         Toast.makeText(this,"开始扫描信号强度",Toast.LENGTH_SHORT).show();
+        // 清空当前数据
+        wifiList.clear();
+        wifiMacList.clear();
+        //打开wifi
+        wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
     }
 
     @Override
@@ -40,7 +47,9 @@ public class GetRSSIService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        // 关闭定时器，停止采集
         stopTimer();
+        // 将数据发送到前台显示
         sendToRssiActivity();
         Toast.makeText(this,"wifi信号强度扫描结束",Toast.LENGTH_SHORT).show();
     }
@@ -73,8 +82,6 @@ public class GetRSSIService extends Service {
 
     // 获取wifi信号强度
     private void getWifiRssi(){
-        //打开wifi
-        wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
         if (!wifiManager.isWifiEnabled()) {
             wifiManager.setWifiEnabled(true);
         }
@@ -113,13 +120,13 @@ public class GetRSSIService extends Service {
     // 将获取的信号强度按照json格式返回给Activity
     private void sendToRssiActivity()
     {
-        JSONObject json = new JSONObject();
+        sendToServerData = new JSONObject();
         for(int i=0;i<wifiList.size();i++)
         {
             WifiRssi wifiRssi = wifiList.get(i);
             wifiRssi.calculateRssiArg();
             try {
-                json.put("ap"+i,wifiRssi.getApiFormat());
+                sendToServerData.put("ap"+i,wifiRssi.getApiFormat());
             }catch (JSONException e)
             {
                 e.printStackTrace();
@@ -129,7 +136,7 @@ public class GetRSSIService extends Service {
         String data = gson.toJson(json);*/
         Intent intent = new Intent();
         intent.setAction("apData");
-        intent.putExtra("ap",json.toString());
+        intent.putExtra("ap",sendToServerData.toString());
         sendBroadcast(intent);
     }
 
@@ -147,4 +154,6 @@ public class GetRSSIService extends Service {
         }
         return wifiRssi;
     }
+
+
 }

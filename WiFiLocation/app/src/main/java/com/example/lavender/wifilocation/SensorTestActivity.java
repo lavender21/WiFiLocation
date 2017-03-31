@@ -105,7 +105,7 @@ public class SensorTestActivity extends AppCompatActivity implements View.OnClic
         {
             e.printStackTrace();
         }
-        HttpConnect httpConnect = new HttpConnect();
+        HttpConnect httpConnect = new HttpConnect(this);
         httpConnect.execute("POST", httpConnect.APIPOSTTEST,json.toString());
         Toast.makeText(SensorTestActivity.this,res,Toast.LENGTH_LONG).show();
     }

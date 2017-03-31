@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // http请求测试;
     public void httpRequestGet()
     {
-        HttpConnect httpConnect = new HttpConnect();
+        HttpConnect httpConnect = new HttpConnect(this);
         httpConnect.execute("GET",HttpConnect.APITEST,"");
     }
     public void httpRequestPost()
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }catch (JSONException e){
             e.printStackTrace();;
         }
-        HttpConnect httpConnect = new HttpConnect();
+        HttpConnect httpConnect = new HttpConnect(this);
         httpConnect.execute("POST", httpConnect.APIPOSTTEST,jsonObject.toString());
     }
 }

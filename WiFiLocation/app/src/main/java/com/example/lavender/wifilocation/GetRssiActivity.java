@@ -11,22 +11,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import static com.example.lavender.wifilocation.Common.toJson;
+
 
 public class GetRssiActivity extends AppCompatActivity implements View.OnClickListener {
     private Button btnStartGetRssi,btnStopGetRssi;
     private EditText edtCoord,edtMemory;
-    public static TextView txtShow;
+    private  TextView txtShow;
     private String apData = "";
-    public static String httpRes = "";
+
+    @Override
+    protected void onDestroy() {
+        stopScan();
+        super.onDestroy();
+    }
+
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -54,6 +57,8 @@ public class GetRssiActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.btnStopGetRssi:
                 stopScan();
+                // 发送数据到服务器
+                sendDataToServer();
                 break;
         }
     }
@@ -65,6 +70,7 @@ public class GetRssiActivity extends AppCompatActivity implements View.OnClickLi
         btnStartGetRssi.setOnClickListener(this);
         btnStopGetRssi = (Button)findViewById(R.id.btnStopGetRssi);
         btnStopGetRssi.setOnClickListener(this);
+        btnStopGetRssi.setEnabled(false);
         edtCoord = (EditText)findViewById(R.id.edtCoord);
         edtMemory = (EditText)findViewById(R.id.edtMemory);
         txtShow = (TextView)findViewById(R.id.txtShow);
@@ -73,6 +79,8 @@ public class GetRssiActivity extends AppCompatActivity implements View.OnClickLi
     // 开始扫描wifi信号强度
     public void startScan()
     {
+        btnStartGetRssi.setEnabled(false);
+        btnStopGetRssi.setEnabled(true);
         Intent intent = new Intent(GetRssiActivity.this,GetRSSIService.class);
         startService(intent);
     }
@@ -80,9 +88,10 @@ public class GetRssiActivity extends AppCompatActivity implements View.OnClickLi
     // 结束扫描wifi信号强度
     public void stopScan()
     {
+        btnStopGetRssi.setEnabled(false);
+        btnStartGetRssi.setEnabled(true);
         Intent intent = new Intent(GetRssiActivity.this,GetRSSIService.class);
         stopService(intent);
-        sendDataToServer();
     }
 
     // 发送数据到服务器
@@ -102,11 +111,8 @@ public class GetRssiActivity extends AppCompatActivity implements View.OnClickLi
         {
             e.printStackTrace();
         }
-        HttpConnect httpConnect = new HttpConnect();
-/*
-        String data = gson.toJson(json);
-*/
+        HttpConnect httpConnect = new HttpConnect(this);
         httpConnect.execute("POST",httpConnect.FINGERPRINT,json.toString());
-//        Toast.makeText(this,httpRes,Toast.LENGTH_LONG).show();
     }
+
 }

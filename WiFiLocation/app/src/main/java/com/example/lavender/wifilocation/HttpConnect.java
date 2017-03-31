@@ -1,5 +1,6 @@
 package com.example.lavender.wifilocation;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -33,8 +34,8 @@ import static com.example.lavender.wifilocation.Common.toJson;
 public class HttpConnect extends AsyncTask<String,String,String> {
     // 服务器端IP地址
     public static final String IP = "192.168.43.249";
-    public static final String IP2 = "10.101.102.253";
-    public static final String BASE_URL="http://"+IP+":8080";
+    public static final String IP2 = "192.168.191.1";
+    public static final String BASE_URL="http://"+IP2+":8080";
 //    public static final String BASE_URL = "https://www.baidu.com/";
     public static final String TAG = "HttpConnect";
     public static final String UTF_8 = "UTF-8";
@@ -42,6 +43,11 @@ public class HttpConnect extends AsyncTask<String,String,String> {
     public static final String APIPOSTTEST = "/api/DataTest/";      // 上传传感器数据接口
     public static final String FINGERPRINT = "/api/Fingerprint/";   // 采集指纹库接口
 
+    Activity myActivity;
+    public HttpConnect(Activity activity){
+        super();
+        myActivity = activity;
+    }
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -49,8 +55,7 @@ public class HttpConnect extends AsyncTask<String,String,String> {
 
     @Override
     protected void onPostExecute(String s) {
-        GetRssiActivity obj = new GetRssiActivity();
-        Toast.makeText(obj,s,Toast.LENGTH_LONG).show();
+        Toast.makeText(myActivity,s,Toast.LENGTH_LONG).show();
         super.onPostExecute(s);
     }
 
@@ -60,15 +65,7 @@ public class HttpConnect extends AsyncTask<String,String,String> {
         String method = params[0];
         String url = BASE_URL + params[1];
         JSONObject data = toJson(params[2]);
-      /*  Gson gson = new Gson();
-        JSONObject data = gson.fromJson(params[2],JSONObject.class);*/
-        /*JSONObject data = new JSONObject();
-        try {
-            data = new JSONObject(params[2]);
-        }catch (JSONException e)
-        {
-            e.printStackTrace();
-        }*/
+
         // get 返回的数据  post， delete 返回的状态
         String getData = "";
         boolean temp = false;
@@ -134,6 +131,7 @@ public class HttpConnect extends AsyncTask<String,String,String> {
         {
             e.printStackTrace();
             Log.e(TAG,"GET failure");
+            response.append("请求失败,网络不可达！");
         }finally {
             if (httpURLConnection != null)
             {
@@ -148,7 +146,6 @@ public class HttpConnect extends AsyncTask<String,String,String> {
         // 发送请求
         HttpURLConnection httpURLConnection = null;
         StringBuilder response = new StringBuilder();
-        boolean status = false;
         try{
             Log.i(TAG,"new url");
             URL myurl = new URL(url);
@@ -184,12 +181,11 @@ public class HttpConnect extends AsyncTask<String,String,String> {
                     response.append(line);
                 }
           /*  }*/
-            status = true;
         }catch (Exception e)
         {
             e.printStackTrace();
-            status = false;
             Log.e(TAG,"Post failure");
+            response.append("请求失败,网络不可达！");
         }finally {
             if (httpURLConnection != null)
             {
