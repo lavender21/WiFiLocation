@@ -1,7 +1,9 @@
 package com.example.lavender.wifilocation;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,7 +16,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Iterator;
+
+import static com.example.lavender.wifilocation.Common.toJson;
 
 /**
  * Created by lavender on 2017/3/21.
@@ -27,12 +32,15 @@ import java.util.Iterator;
 
 public class HttpConnect extends AsyncTask<String,String,String> {
     // 服务器端IP地址
-    public static final String BASE_URL="http://10.101.102.253:8080";
+    public static final String IP = "192.168.43.249";
+    public static final String IP2 = "10.101.102.253";
+    public static final String BASE_URL="http://"+IP+":8080";
 //    public static final String BASE_URL = "https://www.baidu.com/";
     public static final String TAG = "HttpConnect";
     public static final String UTF_8 = "UTF-8";
-    public static final String APITEST = "/api/DataTest/1";
-    public static final String APIPOSTTEST = "/api/DataTest/";
+    public static final String APITEST = "/api/DataTest/26";         // 测试http get接口
+    public static final String APIPOSTTEST = "/api/DataTest/";      // 上传传感器数据接口
+    public static final String FINGERPRINT = "/api/Fingerprint/";   // 采集指纹库接口
 
     @Override
     protected void onPreExecute() {
@@ -41,7 +49,8 @@ public class HttpConnect extends AsyncTask<String,String,String> {
 
     @Override
     protected void onPostExecute(String s) {
-        MainActivity.showRssi.setText(s);
+        GetRssiActivity obj = new GetRssiActivity();
+        Toast.makeText(obj,s,Toast.LENGTH_LONG).show();
         super.onPostExecute(s);
     }
 
@@ -50,15 +59,16 @@ public class HttpConnect extends AsyncTask<String,String,String> {
         // 三个参数：请求方式   请求接口地址  发送的数据
         String method = params[0];
         String url = BASE_URL + params[1];
-        JSONObject data = new JSONObject();
-        try{
+        JSONObject data = toJson(params[2]);
+      /*  Gson gson = new Gson();
+        JSONObject data = gson.fromJson(params[2],JSONObject.class);*/
+        /*JSONObject data = new JSONObject();
+        try {
             data = new JSONObject(params[2]);
         }catch (JSONException e)
         {
             e.printStackTrace();
-            Log.e(TAG,"string to Json failure");
-        }
-
+        }*/
         // get 返回的数据  post， delete 返回的状态
         String getData = "";
         boolean temp = false;
@@ -81,17 +91,22 @@ public class HttpConnect extends AsyncTask<String,String,String> {
         return getData;
     }
 
+
+
     // get
     public String HttpGet(String url, JSONObject data){
         // 发送请求
         HttpURLConnection httpURLConnection = null;
         StringBuilder response = new StringBuilder();
         // 在url上添加get的参数
-        String urlData = JsonToString_url(data);
-
-        if (urlData != "")
+        String urlData = "";
+        if (data.keys().hasNext())
         {
-            url += "?"+urlData;
+            urlData = JsonToString_url(data);
+            if (urlData != "")
+            {
+                url += "?"+urlData;
+            }
         }
 
         try{
@@ -108,7 +123,7 @@ public class HttpConnect extends AsyncTask<String,String,String> {
             {
                 InputStream in = httpURLConnection.getInputStream();
                 Log.i(TAG,"read inputstream data");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in,UTF_8));
                 Log.i(TAG,"add data in response");
                 String line;
                 while((line = reader.readLine())!=null){
@@ -139,10 +154,16 @@ public class HttpConnect extends AsyncTask<String,String,String> {
             URL myurl = new URL(url);
             httpURLConnection = (HttpURLConnection)myurl.openConnection();
             httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.setDoInput(true);
             httpURLConnection.setReadTimeout(8000);
             httpURLConnection.setConnectTimeout(8000);
+            httpURLConnection.setRequestProperty("Content-Type","application/json");
+            httpURLConnection.setRequestProperty("Charset",UTF_8);
 
             Log.i(TAG,"add post data");
+            httpURLConnection.connect();
+
             OutputStream os = httpURLConnection.getOutputStream();
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os,UTF_8));
             writer.append(data.toString());
@@ -151,18 +172,18 @@ public class HttpConnect extends AsyncTask<String,String,String> {
             os.close();
 
             Log.i(TAG,"connect");
-            int responseCode = httpURLConnection.getResponseCode();
+/*            int responseCode = httpURLConnection.getResponseCode();
             if (responseCode == httpURLConnection.HTTP_OK)
-            {
+            {*/
                 InputStream in = httpURLConnection.getInputStream();
                 Log.i(TAG,"read inputstream data");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in,UTF_8));
                 Log.i(TAG,"add data in response");
                 String line;
                 while((line = reader.readLine())!=null){
                     response.append(line);
                 }
-            }
+          /*  }*/
             status = true;
         }catch (Exception e)
         {
@@ -191,10 +212,6 @@ public class HttpConnect extends AsyncTask<String,String,String> {
     //    解析json，获取键值对 转换成get的参数
     public String JsonToString_url(JSONObject jsonObject){
         String response = "";
-        if (!jsonObject.keys().hasNext())
-        {
-            return "";
-        }
         Iterator keys = jsonObject.keys();
         while(keys.hasNext()){
             try{

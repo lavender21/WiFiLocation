@@ -30,10 +30,10 @@
         android:id="@+id/btnPost" />
 
     <Button
-        android:text="关闭传感器"
+        android:text="进入wifi信号强度获取"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnStopCoord"
+        android:id="@+id/btnEnterRssi"
         android:layout_below="@+id/btnStopWifi"
         android:layout_toEndOf="@+id/btnStartCoord"
         android:layout_marginStart="17dp" />
@@ -52,8 +52,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnStartCoord"
-        android:layout_alignBaseline="@+id/btnStopCoord"
-        android:layout_alignBottom="@+id/btnStopCoord"
+        android:layout_alignBaseline="@+id/btnEnterRssi"
+        android:layout_alignBottom="@+id/btnEnterRssi"
         android:layout_alignStart="@+id/btnStartWifi" />
 
     <Button
@@ -62,13 +62,13 @@
         android:layout_height="wrap_content"
         android:id="@+id/btnStopWifi"
         android:layout_below="@+id/btnPost"
-        android:layout_alignStart="@+id/btnStopCoord" />
+        android:layout_alignStart="@+id/btnEnterRssi" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:layout_below="@+id/btnStartCoord">
 
         <TextView
             android:text="TextView"

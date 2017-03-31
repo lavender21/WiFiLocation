@@ -77,7 +77,6 @@ public class GetCoordService extends Service implements SensorEventListener {
     public void onDestroy() {
         // 停止检测步数
         unregisterDetector();
-        MainActivity.btnStopCoord.setEnabled(true);
         Toast.makeText(this,"采集完毕",Toast.LENGTH_SHORT).show();
         SetCoordZero();
         super.onDestroy();

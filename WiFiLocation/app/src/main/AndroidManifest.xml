@@ -33,7 +33,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".SensorTestActivity"></activity>
+        <activity android:name=".SensorTestActivity" />
+        <activity android:name=".GetRssiActivity"></activity>
     </application>
 
 </manifest>

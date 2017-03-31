@@ -12,8 +12,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 /*这个页面用来做测试，通过步数和方向来记录轨迹计算坐标，采集数据存入数据库为后期做比对*/
@@ -21,10 +29,10 @@ import java.util.List;
 public class SensorTestActivity extends AppCompatActivity implements View.OnClickListener{
     private Button startSensor, stopSensor;
     private TextView showSenserData;
-    private Sensor accSensor;
-    private Sensor oriSensor;
+    private EditText memory;
+    private String txt = "";
+    public static String res = "";
 
-    private String txt = "当前位置(cm)：";
     // 接收服务传来的数据
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -34,10 +42,8 @@ public class SensorTestActivity extends AppCompatActivity implements View.OnClic
             float degree = intent.getFloatExtra("degree",0);
             int xlen = intent.getIntExtra("xlen",0);
             int ylen = intent.getIntExtra("ylen",0);
-           /* txt += "coordThis:["+coordThis[0] + "," + coordThis[1] + "," + coordThis[2]+
-                    "]coordPre:["+coordPre[0] + "," + coordPre[1] + "," + coordPre[2]+
-                    "xlen:"+xlen+",ylen:"+ylen+",degree:"+degree+"\n";*/
-            txt += "["+coordThis[0] + "," + coordThis[1] + "," + coordThis[2] + "]\n";
+            txt += "["+coordThis[0] + "," + coordThis[1]+"],";
+            res = intent.getStringExtra("res");
             showSenserData.setText(txt);
         }
     };
@@ -50,6 +56,7 @@ public class SensorTestActivity extends AppCompatActivity implements View.OnClic
 
         //注册添加对象
         registerReceiver(receiver, new IntentFilter("sensorData"));
+        registerReceiver(receiver, new IntentFilter("httpResponse"));
     }
 
     @Override
@@ -73,6 +80,7 @@ public class SensorTestActivity extends AppCompatActivity implements View.OnClic
         startSensor.setOnClickListener(this);
         stopSensor.setOnClickListener(this);
         showSenserData = (TextView) findViewById(R.id.showSenserData);
+        memory = (EditText)findViewById(R.id.memory);
     }
 
     // 开始采集坐标数据
@@ -85,6 +93,21 @@ public class SensorTestActivity extends AppCompatActivity implements View.OnClic
     private void stopGetCoordData() {
         Intent intent = new Intent(SensorTestActivity.this, GetCoordService.class);
         stopService(intent);
+        // 将采集的数据发送到服务器
+        JSONObject json = new JSONObject();
+
+        try{
+            json.put("coord",txt.substring(0,txt.length()-1));
+            json.put("memory",memory.getText().toString());
+            json.put("addtime",Common.getNowTime());
+            json.put("flag",0);       // 0 测试坐标  1 测试wifi 2 测试坐标和wifi
+        }catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        HttpConnect httpConnect = new HttpConnect();
+        httpConnect.execute("POST", httpConnect.APIPOSTTEST,json.toString());
+        Toast.makeText(SensorTestActivity.this,res,Toast.LENGTH_LONG).show();
     }
 
 }

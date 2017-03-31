@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,8 +22,9 @@ import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    public static Button btnStartWifi,btnStopWifi,btnStartCoord,btnStopCoord,btnGet,btnPost;
+    public static Button btnStartWifi,btnStopWifi,btnStartCoord,btnEnterRssi,btnGet,btnPost;
     public static TextView showRssi;
+    public static String res = "";
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -60,8 +62,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         showRssi = (TextView)findViewById(R.id.textView);
         btnStartCoord = (Button)findViewById(R.id.btnStartCoord);
         btnStartCoord.setOnClickListener(this);
-        btnStopCoord = (Button)findViewById(R.id.btnStopCoord);
-        btnStopCoord.setOnClickListener(this);
+        btnEnterRssi = (Button)findViewById(R.id.btnEnterRssi);
+        btnEnterRssi.setOnClickListener(this);
     }
 
     @Override
@@ -91,14 +93,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                   startActivity(intentSensor);
 //                startService(intentSensor);
                 break;
-            // 关闭传感器
-            case R.id.btnStopCoord:
+            // 进入获取wifi信号强度界面
+            case R.id.btnEnterRssi:
+                 Intent intentRssi = new Intent(MainActivity.this,GetRssiActivity.class);
+                startActivity(intentRssi);
 //                stopService(intentSensor);
                 break;
         }
     }
 
-    // http请求;
+    // http请求测试;
     public void httpRequestGet()
     {
         HttpConnect httpConnect = new HttpConnect();
@@ -108,9 +112,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         JSONObject jsonObject = new JSONObject();
         try{
-            jsonObject.put("coord","[12,34],[23,12],[24,12]");
-            jsonObject.put("memory","android app 发送 http post请求测试");
+            jsonObject.put("coord","[-49, 1], [52, -85], [-86, 146], [37, -284], [-327, 81],[-129,-533],[-458,-243],[-506,-664],[-720,-608],[-939,-913]");
+            jsonObject.put("memory","android app 发送 http post请求测试 （向东执行大约6~7米采集到的坐标）");
             jsonObject.put("flag","0");
+            jsonObject.put("addtime",System.currentTimeMillis());
         }catch (JSONException e){
             e.printStackTrace();;
         }

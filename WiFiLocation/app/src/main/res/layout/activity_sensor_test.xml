@@ -40,8 +40,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/btnStopSenser"
-        android:layout_alignStart="@+id/btnStartSenser"
+        android:layout_below="@+id/memory"
         android:layout_marginTop="24dp">
 
 
@@ -51,4 +50,14 @@
             android:layout_height="wrap_content"
             android:id="@+id/showSenserData" />
     </ScrollView>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="备注："
+        android:ems="10"
+        android:id="@+id/memory"
+        android:layout_below="@+id/btnStopSenser"
+        android:layout_alignEnd="@+id/btnStopSenser" />
 </RelativeLayout>
