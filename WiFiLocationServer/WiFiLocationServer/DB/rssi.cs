@@ -116,6 +116,17 @@ namespace WiFiLocationServer.DB
                 return null;
             }
         }
+
+        public DataSet GetRssiList(string whereStr)
+        {
+            var sql = "select rssi,mac,coord_id from tb_wifi_rssi";
+            if (whereStr.Length > 0)
+            {
+                sql += " where " + whereStr;
+            }
+            DataSet ds = DbHelperSQL.Query(sql);
+            return ds;
+        }
         #endregion
 
 

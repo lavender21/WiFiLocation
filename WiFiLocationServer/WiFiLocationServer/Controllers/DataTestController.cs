@@ -7,30 +7,33 @@ using System.Web.Http;
 using WiFiLocationServer.Models;
 using WiFiLocationServer.DB;
 using System.Text;
+using System.Data;
 
 namespace WiFiLocationServer.Controllers
 {
     public class DataTestController : ApiController
     {
         DB.data_test db = new DB.data_test();
+        DB.rssi rssiDb = new DB.rssi();
 
         // Get /api/DataTest/id
         [HttpGet]
-        public Models.data_test GetById(int id)
+        public DataSet GetById(int id)
         {
-            Models.data_test model = db.GetModel(id);
+            //Models.data_test model = db.GetModel(id);
+            DataSet ds = rssiDb.GetRssiList("room_id = "+id+" and mobile_id = 3 and mac in ('0a:69:6c:51:36:80','0a:69:6c:51:36:7f')");
             var response = Request.CreateResponse();
-            //if (model != null)
-            //{
-            //    response = Request.CreateResponse(HttpStatusCode.OK);
-            //    response.Content = new StringContent(model.ToString(), Encoding.Unicode);
-            //}
-            //else
-            //{
-            //    response = Request.CreateResponse(HttpStatusCode.NotFound);
-            //    response.Content = new StringContent("{\"message\":\"无该资源\"}",Encoding.Unicode);
-            //}
-            return model;
+            if (ds != null)
+            {
+                response = Request.CreateResponse(HttpStatusCode.OK);
+                response.Content = new StringContent(ds.ToString(), Encoding.Unicode);
+            }
+            else
+            {
+                response = Request.CreateResponse(HttpStatusCode.NotFound);
+                response.Content = new StringContent("{\"message\":\"无该资源\"}", Encoding.Unicode);
+            }
+            return ds;
         }
 
         // POST /api/DataTest/
