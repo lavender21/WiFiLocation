@@ -163,3 +163,4 @@ __pycache__/
 **/bin/*
 *.csproj
 WiFiLocationServer/.vs/
+WiFiLocationServer/*.csproj

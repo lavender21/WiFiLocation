@@ -58,10 +58,9 @@ namespace WiFiLocationServer.Models
 
             int xCoord = 0;
             int yCoord = 0;
-            string[] coord = new string[2];
             for (int j = 0; j < coordLength; j++)
             {
-                coord = coordDt.Rows[j]["coord"].ToString().Split(',');
+                string[] coord = coordDt.Rows[j]["coord"].ToString().Split('，');
                 xCoord += int.Parse(coord[0]);
                 yCoord += int.Parse(coord[1]);
             }

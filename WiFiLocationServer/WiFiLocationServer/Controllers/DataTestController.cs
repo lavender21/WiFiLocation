@@ -8,6 +8,8 @@ using WiFiLocationServer.Models;
 using WiFiLocationServer.DB;
 using System.Text;
 using System.Data;
+using Newtonsoft.Json.Linq;
+
 
 namespace WiFiLocationServer.Controllers
 {
@@ -39,29 +41,91 @@ namespace WiFiLocationServer.Controllers
         }
 
         // POST /api/DataTest/
-        public HttpResponseMessage Post([FromBody]Models.data_test model)
+        public HttpResponseMessage Post([FromBody]JObject value)
         {
             var response = Request.CreateResponse();
-            
-            if (model != null)
+            int flag = 0;  // 1 success 2 error 3 input invalid
+
+            var room_id = value["room_id"].ToString();
+            var mobile_id = value["mobile_id"].ToString();
+            JToken ap = new JObject();
+            ap = value["ap"];
+            var macList = "";
+            var rssiDictionary = new Dictionary<string, int>();
+
+            if (ap.Count() > 0)
             {
-                if (db.Add(model) > 0)
+                IEnumerable<JToken> temp = ap.Values();
+                foreach (var item in temp)
                 {
-                    response = Request.CreateResponse(HttpStatusCode.OK);
-                    response.Content = new StringContent("{\"message\":\"添加成功\"}", Encoding.UTF8);
-                }
-                else
-                {
-                    response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-                    response.Content = new StringContent("{\"message\":\"发生未知错误\"}", Encoding.UTF8);
+                    try
+                    {
+                        macList += "'" + item["mac"].ToString() + "',";
+                        rssiDictionary.Add(item["mac"].ToString(),int.Parse(item["rssi"].ToString()));
+                    }
+                    catch (Exception)
+                    {
+                        flag = 3;            
+                    }
                 }
             }
-            else
+            macList = macList.Substring(0, macList.Length - 1);
+
+            DB.rssi rssiDb = new rssi();
+            string where = "room_id = " + room_id + " and mobile_id = "+ mobile_id +" and mac in("+ macList +")";
+            DataSet ds = rssiDb.GetRssiList(where);
+            var allRssiList = new Dictionary<int, DataTable>();
+            if (ds != null)
             {
-                response = Request.CreateResponse(HttpStatusCode.BadRequest);
-                response.Content = new StringContent("{\"message\":\"post数据为空\"}", Encoding.Unicode);
+                allRssiList = convertAllRssiList(ds);
             }
+
+            Location location = new Location();
+            var result = location.KNNalgorithm(5, rssiDictionary, allRssiList);
+            response.Content = new StringContent("{\"message\":"+ result +"}", Encoding.UTF8);
             return response;
         }
+
+          private Dictionary<int, DataTable> convertAllRssiList(DataSet ds)
+          {
+              var result = new Dictionary<int, DataTable>();
+              var dt = ds.Tables[0];
+              DataTable value = new DataTable();
+              DataRow row;
+              DataColumn col;
+
+              col = new DataColumn();
+              col.DataType = System.Type.GetType("System.Int32");
+              col.ColumnName = "rssi";
+              col.ReadOnly = true;
+              col.Unique = true;
+              value.Columns.Add(col);
+              col = new DataColumn();
+              col.DataType = System.Type.GetType("System.String");
+              col.ColumnName = "mac";
+              col.ReadOnly = true;
+              col.Unique = true;
+              value.Columns.Add(col);
+          
+              for (int i = 0; i < dt.Rows.Count; i++)
+              {
+                  value.Clear();
+                  int key = int.Parse(dt.Rows[i]["coord_id"].ToString());
+                  if (result.ContainsKey(key))
+                  {
+                      result.TryGetValue(key, out value);
+                  }
+                  else
+                  {
+                      result.Add(key,value);
+                  }
+                  row = value.NewRow();
+                  row["rssi"] = dt.Rows[i]["rssi"].ToString();
+                  row["mac"] = dt.Rows[i]["mac"].ToString();
+                  value.Rows.Add(row);
+                  result[key] = value;
+              }
+              return result;
+          }
     }
 }
