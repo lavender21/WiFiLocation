@@ -17,7 +17,6 @@ namespace WiFiLocationServer.Controllers
         public HttpResponseMessage Post([FromBody]JObject value)
         {
             var response = Request.CreateResponse();
-            int flag = 0;  // 1 success 2 error 3 input invalid
 
             var room_id = value["room_id"].ToString();
             var mobile_id = value["mobile_id"].ToString();
@@ -38,7 +37,8 @@ namespace WiFiLocationServer.Controllers
                     }
                     catch (Exception)
                     {
-                        flag = 3;
+                        response.Content = new StringContent("{\"message\":\"请求数据错误！\"}", Encoding.UTF8);
+                        return response;
                     }
                 }
             }
@@ -54,7 +54,7 @@ namespace WiFiLocationServer.Controllers
             }
 
             Location location = new Location();
-            var result = location.KNNalgorithm(5, rssiDictionary, allRssiList);
+            var result = location.KNNalgorithm(10, rssiDictionary, allRssiList);
             response.Content = new StringContent("{\"message\":" + result + "}", Encoding.UTF8);
             return response;
         }
