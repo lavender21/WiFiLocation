@@ -110,7 +110,26 @@ namespace WiFiLocationServer.DB
                 return null;
             }
         }
+        
+        public DataSet getCoordList (string idlist)
+        {
+            var sql = "select coord from tb_wifi_fingerprint";
+            if (idlist.Length > 0)
+            {
+                sql += " where id in(" + idlist + ")";
+            }
+            DataSet ds =  DbHelperSQL.Query(sql);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                return ds;
+            }
+            else
+            {
+                return null;
+            }
+        }
         #endregion
+
 
 
 
