@@ -12,10 +12,10 @@ namespace WiFiLocationServer.Models
         public string KNNalgorithm(int k, Dictionary<string, int> rssiList, Dictionary<int, DataTable> coordDictionary)
         {
             string result = "";
-            var DistanceList = new Dictionary<int, int>();  // {coord:rssi}
+            var DistanceList = new Dictionary<int, float>();  // {coord:rssi}
             foreach (var item in coordDictionary)
             {
-                int sum = 0;
+                float sum = 0;
                 DataTable dt = item.Value;
                 int number = dt.Rows.Count;
                 if (number == 0)
@@ -27,9 +27,8 @@ namespace WiFiLocationServer.Models
                     int value = 0;
                     rssiList.TryGetValue(dt.Rows[i]["mac"].ToString(), out value);
                     sum += Math.Abs(int.Parse(dt.Rows[i]["rssi"].ToString()) - value);
-                }
-
-                DistanceList.Add(item.Key, sum / number);
+                }               
+                DistanceList.Add(item.Key, sum/number);
             }
 
             var sortedDistanceList = from pair in DistanceList

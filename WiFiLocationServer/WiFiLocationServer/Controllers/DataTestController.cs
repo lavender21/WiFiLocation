@@ -90,34 +90,35 @@ namespace WiFiLocationServer.Controllers
           {
               var result = new Dictionary<int, DataTable>();
               var dt = ds.Tables[0];
-              DataTable value = new DataTable();
-              DataRow row;
-              DataColumn col;
-
-              col = new DataColumn();
-              col.DataType = System.Type.GetType("System.Int32");
-              col.ColumnName = "rssi";
-              col.ReadOnly = true;
-              col.Unique = true;
-              value.Columns.Add(col);
-              col = new DataColumn();
-              col.DataType = System.Type.GetType("System.String");
-              col.ColumnName = "mac";
-              col.ReadOnly = true;
-              col.Unique = true;
-              value.Columns.Add(col);
           
               for (int i = 0; i < dt.Rows.Count; i++)
               {
-                  value.Clear();
+                  DataTable value = new DataTable();
+                  DataRow row;
+                  DataColumn col;
+
+                  col = new DataColumn();
+                  col.DataType = System.Type.GetType("System.Int32");
+                  col.ColumnName = "rssi";
+                  col.ReadOnly = true;
+                  col.Unique = true;
+                  value.Columns.Add(col);
+                  col = new DataColumn();
+                  col.DataType = System.Type.GetType("System.String");
+                  col.ColumnName = "mac";
+                  col.ReadOnly = true;
+                  col.Unique = true;
+                  value.Columns.Add(col);
+
+                  //value.Clear();
                   int key = int.Parse(dt.Rows[i]["coord_id"].ToString());
-                  if (result.ContainsKey(key))
+                  if (!result.ContainsKey(key))
                   {
-                      result.TryGetValue(key, out value);
+                      result.Add(key,value);
                   }
                   else
                   {
-                      result.Add(key,value);
+                      value = result[key];
                   }
                   row = value.NewRow();
                   row["rssi"] = dt.Rows[i]["rssi"].ToString();
