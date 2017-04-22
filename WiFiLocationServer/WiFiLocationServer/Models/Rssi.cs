@@ -12,5 +12,6 @@ namespace WiFiLocationServer.Models
         public int rssi { set; get; }
         public int coord_id { set; get; }
         public int mobile_id { set; get; }
+        public int room_id { set; get; }
     }
 }
