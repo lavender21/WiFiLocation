@@ -68,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/btnStartCoord">
+        android:layout_below="@+id/btnLocationTest">
 
         <TextView
             android:text="TextView"
@@ -77,5 +77,13 @@
             android:layout_marginTop="30dp"
             android:id="@+id/textView"/>
     </ScrollView>
+
+    <Button
+        android:text="定位测试"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnLocationTest"
+        android:layout_below="@+id/btnStartCoord"
+        android:layout_alignStart="@+id/btnStartCoord" />
 
 </RelativeLayout>
