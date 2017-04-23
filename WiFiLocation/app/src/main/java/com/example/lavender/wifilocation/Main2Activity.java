@@ -93,7 +93,6 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         HttpConnect http = new HttpConnect(new HttpConnect.AsyncResponse() {
             @Override
             public void processFinish(String output) {
-                Toast.makeText(Main2Activity.this,output,Toast.LENGTH_SHORT).show();
                 txtCoord.setText("您的当前位置为：" + output);
             }
         });

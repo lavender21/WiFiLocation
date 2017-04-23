@@ -27,7 +27,8 @@
         android:layout_below="@+id/edtCoord"
         android:layout_alignEnd="@+id/edtCoord"
         android:layout_marginTop="18dp"
-        android:id="@+id/edtMemory" />
+        android:id="@+id/edtMemory"
+        android:layout_alignStart="@+id/edtCoord" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -38,7 +39,8 @@
         android:layout_marginTop="12dp"
         android:id="@+id/edtCoord"
         android:layout_below="@+id/btnStartGetRssi"
-        android:layout_alignEnd="@+id/btnStopGetRssi" />
+        android:layout_alignEnd="@+id/btnStopGetRssi"
+        android:layout_toEndOf="@+id/btnStartGetRssi" />
 
     <TextView
         android:text="请输入坐标"
@@ -82,6 +84,5 @@
         android:layout_marginEnd="21dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true" />
-
 
 </RelativeLayout>
