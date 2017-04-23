@@ -27,23 +27,23 @@ namespace WiFiLocationServer.Controllers
             switch (flag) {
                 case 0:             // 全部处理成功
                     response = Request.CreateResponse(HttpStatusCode.OK);
-                    response.Content = new StringContent("{\"message\":\"上传成功\"}", Encoding.UTF8);
+                    response.Content = new StringContent("上传成功", Encoding.UTF8);
                     break;
                 case 1:
                     response = Request.CreateResponse(HttpStatusCode.OK);
-                    response.Content = new StringContent("{\"message\":\"部分rssi上传成功\"}", Encoding.UTF8);
+                    response.Content = new StringContent("部分rssi上传成功", Encoding.UTF8);
                     break;
                 case 2:
                     response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-                    response.Content = new StringContent("{\"message\":\"coord数据上传成功，rssi数据上传失败！\"}", Encoding.UTF8);
+                    response.Content = new StringContent("coord数据上传成功，rssi数据上传失败！", Encoding.UTF8);
                     break;
                 case 3:
                     response = Request.CreateResponse(HttpStatusCode.InternalServerError);
-                    response.Content = new StringContent("{\"message\":\"全部上传失败！\"}", Encoding.UTF8);
+                    response.Content = new StringContent("全部上传失败！", Encoding.UTF8);
                     break;
                 case 4:
                     response = Request.CreateResponse(HttpStatusCode.BadRequest);
-                    response.Content = new StringContent("{\"message\":\"传入json数据有误，解析出错！\"}", Encoding.UTF8);
+                    response.Content = new StringContent("传入json数据有误，解析出错！", Encoding.UTF8);
                     break;
             }
            

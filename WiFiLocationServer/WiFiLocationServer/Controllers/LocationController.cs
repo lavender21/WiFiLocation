@@ -37,7 +37,7 @@ namespace WiFiLocationServer.Controllers
                     }
                     catch (Exception)
                     {
-                        response.Content = new StringContent("{\"message\":\"请求数据错误！\"}", Encoding.UTF8);
+                        response.Content = new StringContent("请求数据错误！", Encoding.UTF8);
                         return response;
                     }
                 }
@@ -55,7 +55,7 @@ namespace WiFiLocationServer.Controllers
 
             Location location = new Location();
             var result = location.KNNalgorithm(10, rssiDictionary, allRssiList);
-            response.Content = new StringContent("{\"message\":" + result + "}", Encoding.UTF8);
+            response.Content = new StringContent(result, Encoding.UTF8);
             return response;
         }
 
