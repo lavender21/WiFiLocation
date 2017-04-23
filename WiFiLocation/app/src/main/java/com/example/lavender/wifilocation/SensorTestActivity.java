@@ -73,6 +73,12 @@ public class SensorTestActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(receiver);
+        super.onDestroy();
+    }
+
     // 初始化
     private void init() {
         startSensor = (Button) findViewById(R.id.btnStartSenser);
@@ -105,7 +111,12 @@ public class SensorTestActivity extends AppCompatActivity implements View.OnClic
         {
             e.printStackTrace();
         }
-        HttpConnect httpConnect = new HttpConnect(this);
+        HttpConnect httpConnect = new HttpConnect(new HttpConnect.AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+                Toast.makeText(SensorTestActivity.this,output,Toast.LENGTH_SHORT).show();
+            }
+        });
         httpConnect.execute("POST", httpConnect.APIPOSTTEST,json.toString());
         Toast.makeText(SensorTestActivity.this,res,Toast.LENGTH_LONG).show();
     }

@@ -1,10 +1,7 @@
 package com.example.lavender.wifilocation;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,7 +14,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.Iterator;
 
 import static com.example.lavender.wifilocation.Common.toJson;
@@ -42,11 +38,17 @@ public class HttpConnect extends AsyncTask<String,String,String> {
     public static final String APITEST = "/api/DataTest/26";         // 测试http get接口
     public static final String APIPOSTTEST = "/api/DataTest/";      // 上传传感器数据接口
     public static final String FINGERPRINT = "/api/Fingerprint/";   // 采集指纹库接口
+    public static final String LOCATION = "/api/Location/";          // 定位接口
 
-    Activity myActivity;
-    public HttpConnect(Activity activity){
+    public interface AsyncResponse {
+        void processFinish(String output);
+    }
+
+    public AsyncResponse delegate = null;
+
+    public HttpConnect(AsyncResponse delegate){
         super();
-        myActivity = activity;
+        this.delegate = delegate;
     }
     @Override
     protected void onPreExecute() {
@@ -55,7 +57,7 @@ public class HttpConnect extends AsyncTask<String,String,String> {
 
     @Override
     protected void onPostExecute(String s) {
-        Toast.makeText(myActivity,s,Toast.LENGTH_LONG).show();
+        delegate.processFinish(s);
         super.onPostExecute(s);
     }
 
@@ -87,8 +89,6 @@ public class HttpConnect extends AsyncTask<String,String,String> {
         }
         return getData;
     }
-
-
 
     // get
     public String HttpGet(String url, JSONObject data){
@@ -169,9 +169,9 @@ public class HttpConnect extends AsyncTask<String,String,String> {
             os.close();
 
             Log.i(TAG,"connect");
-/*            int responseCode = httpURLConnection.getResponseCode();
+            int responseCode = httpURLConnection.getResponseCode();
             if (responseCode == httpURLConnection.HTTP_OK)
-            {*/
+            {
                 InputStream in = httpURLConnection.getInputStream();
                 Log.i(TAG,"read inputstream data");
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in,UTF_8));
@@ -180,7 +180,7 @@ public class HttpConnect extends AsyncTask<String,String,String> {
                 while((line = reader.readLine())!=null){
                     response.append(line);
                 }
-          /*  }*/
+            }
         }catch (Exception e)
         {
             e.printStackTrace();

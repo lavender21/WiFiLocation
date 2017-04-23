@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,12 +24,6 @@ public class GetRssiActivity extends AppCompatActivity implements View.OnClickLi
     private EditText edtCoord,edtMemory;
     private  TextView txtShow;
     private String apData = "";
-
-    @Override
-    protected void onDestroy() {
-        stopScan();
-        super.onDestroy();
-    }
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -46,6 +41,13 @@ public class GetRssiActivity extends AppCompatActivity implements View.OnClickLi
 
         // 注册监听事件
         registerReceiver(receiver,new IntentFilter("apData"));
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(receiver);
+        stopScan();
+        super.onDestroy();
     }
 
     @Override
@@ -111,7 +113,12 @@ public class GetRssiActivity extends AppCompatActivity implements View.OnClickLi
         {
             e.printStackTrace();
         }
-        HttpConnect httpConnect = new HttpConnect(this);
+        HttpConnect httpConnect = new HttpConnect(new HttpConnect.AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+                Toast.makeText(GetRssiActivity.this,output,Toast.LENGTH_SHORT).show();
+            }
+        });
         httpConnect.execute("POST",httpConnect.FINGERPRINT,json.toString());
     }
 

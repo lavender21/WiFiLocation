@@ -48,7 +48,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         registerReceiver(receiver, new IntentFilter("sensorData"));
     }
 
-
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(receiver);
+        super.onDestroy();
+    }
 
     public void init(){
         btnGet = (Button) findViewById(R.id.btnGet);
@@ -105,7 +109,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // http请求测试;
     public void httpRequestGet()
     {
-        HttpConnect httpConnect = new HttpConnect(this);
+        HttpConnect httpConnect = new HttpConnect(new HttpConnect.AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+                Toast.makeText(MainActivity.this,output,Toast.LENGTH_SHORT).show();
+            }
+        });
         httpConnect.execute("GET",HttpConnect.APITEST,"");
     }
     public void httpRequestPost()
@@ -119,7 +128,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }catch (JSONException e){
             e.printStackTrace();;
         }
-        HttpConnect httpConnect = new HttpConnect(this);
+        HttpConnect httpConnect = new HttpConnect(new HttpConnect.AsyncResponse() {
+            @Override
+            public void processFinish(String output) {
+                Toast.makeText(MainActivity.this,output,Toast.LENGTH_SHORT).show();
+            }
+        });
         httpConnect.execute("POST", httpConnect.APIPOSTTEST,jsonObject.toString());
     }
 }
