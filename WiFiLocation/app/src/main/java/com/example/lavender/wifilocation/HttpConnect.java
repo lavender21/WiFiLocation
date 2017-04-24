@@ -39,6 +39,7 @@ public class HttpConnect extends AsyncTask<String,String,String> {
     public static final String APIPOSTTEST = "/api/DataTest/";      // 上传传感器数据接口
     public static final String FINGERPRINT = "/api/Fingerprint/";   // 采集指纹库接口
     public static final String LOCATION = "/api/Location/";          // 定位接口
+    public static final String ROOMLIST = "/api/Room/";
 
     public interface AsyncResponse {
         void processFinish(String output);

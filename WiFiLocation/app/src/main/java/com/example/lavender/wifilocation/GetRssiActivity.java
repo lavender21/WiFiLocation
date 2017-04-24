@@ -8,8 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.test.suitebuilder.TestMethod;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,11 +22,14 @@ import org.json.JSONObject;
 import static com.example.lavender.wifilocation.Common.toJson;
 
 
-public class GetRssiActivity extends AppCompatActivity implements View.OnClickListener {
+public class GetRssiActivity extends AppCompatActivity implements View.OnClickListener,AdapterView.OnItemClickListener {
     private Button btnStartGetRssi,btnStopGetRssi;
     private EditText edtCoord,edtMemory;
-    private  TextView txtShow;
+    private  TextView txtShow,txtRoom;
     private String apData = "";
+    private Spinner spinner;
+    private String room_id;
+    private String[] data = new String[]{"科协办公室","实验室1","实验室2"};
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -76,6 +82,17 @@ public class GetRssiActivity extends AppCompatActivity implements View.OnClickLi
         edtCoord = (EditText)findViewById(R.id.edtCoord);
         edtMemory = (EditText)findViewById(R.id.edtMemory);
         txtShow = (TextView)findViewById(R.id.txtShow);
+        txtRoom = (TextView)findViewById(R.id.txtRoom);
+        spinner = (Spinner)findViewById(R.id.spinner);
+        spinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,data));
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (view.getId()  == R.id.spinner)
+        {
+            room_id = id + 1 + "";
+        }
     }
 
     // 开始扫描wifi信号强度
@@ -109,6 +126,7 @@ public class GetRssiActivity extends AppCompatActivity implements View.OnClickLi
             json.put("flag",0);
             json.put("addtime",Common.getNowTime());
             json.put("mobile_id",Common.getMobileModel());
+            json.put("room_id",room_id);
         }catch (JSONException e)
         {
             e.printStackTrace();
