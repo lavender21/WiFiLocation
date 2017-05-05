@@ -22,7 +22,7 @@ import org.json.JSONObject;
 import static com.example.lavender.wifilocation.Common.toJson;
 
 
-public class GetRssiActivity extends AppCompatActivity implements View.OnClickListener,AdapterView.OnItemClickListener {
+public class GetRssiActivity extends AppCompatActivity implements View.OnClickListener{
     private Button btnStartGetRssi,btnStopGetRssi;
     private EditText edtCoord,edtMemory;
     private  TextView txtShow,txtRoom;
@@ -85,14 +85,16 @@ public class GetRssiActivity extends AppCompatActivity implements View.OnClickLi
         txtRoom = (TextView)findViewById(R.id.txtRoom);
         spinner = (Spinner)findViewById(R.id.spinner);
         spinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,data));
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (view.getId()  == R.id.spinner)
-        {
-            room_id = id + 1 + "";
-        }
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                room_id = id + 1 + "";
+                txtRoom.setText(room_id);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     // 开始扫描wifi信号强度
