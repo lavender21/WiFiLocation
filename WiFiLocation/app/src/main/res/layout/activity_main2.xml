@@ -58,6 +58,23 @@
             android:id="@+id/spinner" />
 
         <TextView
+            android:text="请输入实际坐标"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:id="@+id/txtActualCoord" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:text=""
+            android:ems="10"
+            android:layout_marginTop="12dp"
+            android:id="@+id/edtActualCoord"
+            android:layout_below="@+id/txtActualCoord"/>
+
+        <TextView
             android:text=""
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

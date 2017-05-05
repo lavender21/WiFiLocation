@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     private Button btnLocation,btnScan,btnCollection;
     private String apData;
     private TextView showData,txtCoord,txtRoom;
+    private EditText edtActualCoord;
     private Spinner spinner;
     private String room_id;
     private String[] data = new String[]{"科协办公室","实验室1","实验室2"};
@@ -64,6 +66,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         showData = (TextView)findViewById(R.id.showRssiData);
         txtCoord = (TextView)findViewById(R.id.textCoord);
         txtRoom = (TextView)findViewById(R.id.txtRoom);
+        edtActualCoord = (EditText)findViewById(R.id.edtActualCoord);
         spinner = (Spinner)findViewById(R.id.spinner);
         spinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,data));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -104,6 +107,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         {
             json.put("room_id",room_id);
             json.put("mobile_id","3");
+            json.put("actual_coord",edtActualCoord.getText());
             json.put("ap",toJson(apData));
         }catch (JSONException e)
         {
