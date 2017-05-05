@@ -45,6 +45,9 @@ namespace WiFiLocationServer.Controllers
                     response = Request.CreateResponse(HttpStatusCode.BadRequest);
                     response.Content = new StringContent("传入json数据有误，解析出错！", Encoding.UTF8);
                     break;
+                default:
+                    response.Content = new StringContent("未知异常", Encoding.UTF8);
+                    break;
             }
            
 
@@ -76,6 +79,7 @@ namespace WiFiLocationServer.Controllers
                 Models.Rssi model_rssi = new Models.Rssi();
                 JToken ap = new JObject();
                 model_rssi.coord_id = coord_id;
+                model_rssi.room_id = int.Parse(value["room_id"].ToString());
                 try
                 {
                     model_rssi.mobile_id = Int32.Parse(value["mobile_id"].ToString());

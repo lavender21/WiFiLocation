@@ -35,17 +35,19 @@ namespace WiFiLocationServer.DB
         public bool Add(Models.Rssi model)
         {           
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into tb_wifi_rssi(rssi,mobile_id,mac,coord_id)");
-            strSql.Append(" values (@rssi,@mobile_id,@mac,@coord_id)");
+            strSql.Append("insert into tb_wifi_rssi(rssi,mobile_id,mac,coord_id,room_id)");
+            strSql.Append(" values (@rssi,@mobile_id,@mac,@coord_id,@room_id)");
             SqlParameter[] parameters = {
                     new SqlParameter("@rssi", SqlDbType.Int),
                     new SqlParameter("@mobile_id", SqlDbType.Int),
                     new SqlParameter("@mac", SqlDbType.VarChar,20),
-                    new SqlParameter("@coord_id", SqlDbType.Int)};
+                    new SqlParameter("@coord_id", SqlDbType.Int),
+                    new SqlParameter("@room_id", SqlDbType.Int)};
             parameters[0].Value = model.rssi;
             parameters[1].Value = model.mobile_id;
             parameters[2].Value = model.mac;
             parameters[3].Value = model.coord_id;
+            parameters[4].Value = model.room_id;
 
             object obj = DbHelperSQL.ExecuteSql(strSql.ToString(),parameters); 
             model.id = Convert.ToInt32(obj);
