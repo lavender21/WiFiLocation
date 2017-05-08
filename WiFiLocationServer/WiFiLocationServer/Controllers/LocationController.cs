@@ -90,7 +90,6 @@ namespace WiFiLocationServer.Controllers
                 col.DataType = System.Type.GetType("System.Int32");
                 col.ColumnName = "rssi";
                 col.ReadOnly = true;
-                col.Unique = true;
                 value.Columns.Add(col);
                 col = new DataColumn();
                 col.DataType = System.Type.GetType("System.String");
