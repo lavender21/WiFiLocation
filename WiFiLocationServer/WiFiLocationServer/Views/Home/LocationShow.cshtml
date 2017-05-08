@@ -1,0 +1,63 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>定位精度统计</title>
+    <link rel="stylesheet" href="../../Content/bootstrap.css" />
+    <style>
+        body{
+            background:#eee;
+        }
+        .container .picture{
+            height:500px;
+            margin-top:20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-center">定位精度统计分析</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <label for="room">房间：</label>
+                <select name="room" id="room" class="form-control">
+                    <option value="2">实验室1</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="mobile">手机型号</label>
+                <select name="mobile" id="mobile" class="form-control">
+                    <option value="3">小米4</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="algorithm">定位算法</label>
+                <select name="algorithm" id="algorithm" class="form-control">
+                    <option value="0">KNN定位算法</option>
+                </select>
+            </div>
+        </div>
+        <div class="row text-center" style="margin-top:15px;">
+            <button class="btn btn-primary" id="locationShow">定位精度分析</button>
+        </div>
+        <div class="row">
+            <div class="col-md-10 col-lg-offset-1 picture" id="deviation">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 col-lg-offset-1 picture" id="position">
+
+            </div>
+        </div>
+    </div>
+    <script src="../../Scripts/jquery-1.10.2.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/echarts.common.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/location/location.js" type="text/javascript"></script>
+</body>
+</html>

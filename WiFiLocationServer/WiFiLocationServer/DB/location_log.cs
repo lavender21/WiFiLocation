@@ -114,9 +114,9 @@ namespace WiFiLocationServer.DB
             }
         }
 
-        public DataSet GetlocationLogList()
+        public DataSet GetlocationLogList(string where)
         {
-            string sql = "select id,location_log_name from tb_location_log";
+            string sql = "select actual_coord,location_coord from tb_location_log where " + where; 
             DataSet ds = DbHelperSQL.Query(sql);
             if (ds.Tables[0].Rows.Count > 0)
             {
