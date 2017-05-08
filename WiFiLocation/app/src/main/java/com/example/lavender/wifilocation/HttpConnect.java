@@ -182,6 +182,10 @@ public class HttpConnect extends AsyncTask<String,String,String> {
                     response.append(line);
                 }
             }
+            else if (responseCode >= 500)
+            {
+                response.append("服务器错误");
+            }
         }catch (Exception e)
         {
             e.printStackTrace();

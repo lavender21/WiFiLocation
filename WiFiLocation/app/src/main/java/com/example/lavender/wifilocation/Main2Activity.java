@@ -32,8 +32,6 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     private EditText edtActualCoord;
     private Spinner spinner, spinnerAlgorithm;
     private String room_id, algorithm;
-    private String[] data = new String[]{"科协办公室", "实验室1", "实验室2"};
-    private String[] data2 = new String[]{"knn", "模糊集"};
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -108,6 +106,8 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             case R.id.btnScan:
                 btnLocation.setEnabled(true);
                 btnScan.setEnabled(false);
+                apData = "";
+                showData.setText("");
                 Intent intent = new Intent(Main2Activity.this, GetRSSIService.class);
                 startService(intent);
                 break;
