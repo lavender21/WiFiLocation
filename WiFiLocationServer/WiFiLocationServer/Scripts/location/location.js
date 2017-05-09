@@ -43,6 +43,8 @@ function generatePicture(data) {
     // 组织数据
     var dataList = convertData(data);
 
+    $('#position,#deviation').css('display', 'block');
+
     // 基于准备好的dom，初始化echarts实例
     var myChart1 = echarts.init(document.getElementById('position'));
     var myChart2 = echarts.init(document.getElementById('deviation'));

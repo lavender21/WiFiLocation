@@ -20,6 +20,7 @@ namespace WiFiLocationServer.Controllers
 
             var room_id = value["room_id"].ToString();
             var mobile_id = value["mobile_id"].ToString();
+            var algorithm = value["algorithm"].ToString();
             JToken ap = new JObject();
             ap = value["ap"];
             var macList = "";
@@ -45,7 +46,15 @@ namespace WiFiLocationServer.Controllers
             macList = macList.Substring(0, macList.Length - 1);
 
             DB.rssi rssiDb = new rssi();
-            string where = "room_id = " + room_id + " and mobile_id = " + mobile_id + " and mac in(" + macList + ")";
+            string where = "";
+            if (algorithm == "0")
+            {
+                where = "room_id = " + room_id + " and mobile_id = " + mobile_id + " and mac in(" + macList + ")";
+            }
+            else
+            {
+                where = "room_id = " + room_id + " and mobile_id = " + mobile_id;
+            }
             DataSet ds = rssiDb.GetRssiList(where);
             var allRssiList = new Dictionary<int, DataTable>();
             if (ds != null)
@@ -54,15 +63,22 @@ namespace WiFiLocationServer.Controllers
             }
 
             Location location = new Location();
-            var result = location.KNNalgorithm(10, rssiDictionary, allRssiList);
-
+            var result = "";
+            if  (algorithm == "0")
+            {
+                result = location.KNNalgorithm(10, rssiDictionary, allRssiList);
+            }
+            else
+            {
+                result = location.MHJalgorithm(10, rssiDictionary, allRssiList);
+            }
             DB.location_log locationLogDb = new DB.location_log();
             Models.location_log locationLogModel = new Models.location_log();
             locationLogModel.location_coord = result;
             locationLogModel.actual_coord = value["actual_coord"].ToString();
             locationLogModel.room_id = int.Parse(value["room_id"].ToString());
             locationLogModel.mobile_id = int.Parse(value["mobile_id"].ToString());
-            locationLogModel.location_algorithm = 0;  // 0:KNN
+            locationLogModel.location_algorithm = int.Parse(algorithm);  
             if (locationLogDb.Add(locationLogModel) > 0)
             {
                 response.Content = new StringContent(result, Encoding.UTF8);
