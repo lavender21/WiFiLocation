@@ -3,11 +3,11 @@
     $.ajax({
         url: "/api/LocationLog/?room=" + data.room + "&mobile=" + data.mobile + "&algorithm=" + data.algorithm,
         success: function (data) {
-            if (data.hasOwnProperty('ds') && data.ds.length > 0 ){
+            if (data && data.hasOwnProperty('ds') && data.ds.length > 0 ){
                 generatePicture(data.ds);
             }
             else {
-                alert("返回数据有误！");
+                alert("数据库中无数据！");
             }
         },
         error: function (data) {
