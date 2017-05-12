@@ -4,17 +4,24 @@
 
 #### **app**
 语言：java (android)
+
 环境：windows 10
+
 工具：Android Studio
+
 主要功能：实现wifi信号强度的离线采集， 在线定位，步长计算，步数统计，步行轨迹推算。
 
 
 
 #### **server**
 语言：c#(.net)
+
 环境：windows 10
+
 工具：vs2013
+
 服务：IIS
+
 主要功能：实现与app交互的接口：定位接口，采集数据接口。实现定位算法等核心代码。实现定位精度统计的展示页面。可以展示不同算法定位的结果和误差等。
 
 ### 数据库表设计
@@ -87,6 +94,7 @@ content|描述|varchar(100)|
 
 ### 接口设计
 **1.离线采集接口**
+
 **request information**
 POST  
 api/Fingerprint
@@ -120,6 +128,7 @@ message:"上传成功"
 
 
 **2.定位接口**
+
 **request information**
 POST
 api/Location/
@@ -163,6 +172,7 @@ statusCode :200
 message:"100,100"(定位结果)
 
 **3.获取定位日志接口**
+
 **request information**
 GET
 api/LocationLog/?room={room}&mobile={mobile}&algorithm={algorithm}
@@ -190,6 +200,7 @@ json
 ```
 
 **4.获取实验房间信息接口**
+
 **request information**
 GET
 api/Room/id
@@ -209,6 +220,7 @@ message:
 ```
 
 **5.获取手机型号接口**
+
 **request information**
 GET
 api/MobileModel/id
