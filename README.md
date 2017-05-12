@@ -1,5 +1,7 @@
-# WiFiLocation
-### wifi室内定位与人数统计项目
+
+[toc]
+
+### wifi室内定位与人数统计项目介绍
 这个项目主要实现通过手机端app根据wifi信号强度的实现室内定位。
 
 #### **app**
@@ -25,7 +27,7 @@
 主要功能：实现与app交互的接口：定位接口，采集数据接口。实现定位算法等核心代码。实现定位精度统计的展示页面。可以展示不同算法定位的结果和误差等。
 
 ### 数据库表设计
-wifi指纹信息表
+#### wifi指纹信息表
 **tb_wifi_fingerprint**
 
 |字段名  | 含义 |类型|
@@ -37,7 +39,7 @@ updatetime|更新时间|varchar(50)|
 flag|标志位|int|
 memory|备注|varchar(MAX)|
 
-wifi信号强度表
+#### wifi信号强度表
 **tb_wifi_rssi**
 
 |字段名  | 含义 |类型|
@@ -49,7 +51,7 @@ mobile_id|手机型号id|int|
 room_id|实验房间id|int|
 coord_id|参考坐标点id|int|
 
-房间信息表
+#### 房间信息表
 **tb_room**
 
 |字段名  | 含义 |类型|
@@ -62,7 +64,7 @@ left_down|房间左下角坐标|varchar(10)|
 right_up|房间右上角坐标|varchar(10)|
 right_down|房间右下角坐标|varchar(10)|
 
-定位日志表
+#### 定位日志表
 **tb_location_log**
 
 |字段名  | 含义 |类型|
@@ -76,7 +78,7 @@ location_algorithm|定位算法id|int|
 memory|备注|varchar(MAX)|
 flag|标识(关联采集种类表)|int|
 
-手机型号表
+#### 手机型号表
 **tb_mobile_model**
 
 |字段名  | 含义 |类型|
@@ -84,7 +86,7 @@ flag|标识(关联采集种类表)|int|
 id| 主键|int|
 model_name|手机型号名称|varchar(50)|
 
-采集种类表
+#### 采集种类表
 **tb_collection_flag**
 
 |字段名|含义|类型|
@@ -92,8 +94,17 @@ model_name|手机型号名称|varchar(50)|
 id|主键|int|
 content|描述|varchar(100)|
 
+
+#### 定位算法种类表
+**tb_collection_flag**
+
+|字段名|含义|类型|
+|------------|------------|----------|
+id|主键|int|
+algorithm_name|算法名称|varchar(50)|
+
 ### 接口设计
-**1.离线采集接口**
+#### **1.离线采集接口**
 
 **request information**
 POST  
@@ -127,7 +138,7 @@ statusCode:200
 message:"上传成功"
 
 
-**2.定位接口**
+#### **2.定位接口**
 
 **request information**
 POST
@@ -171,7 +182,7 @@ HttpResponseMessage
 statusCode :200
 message:"100,100"(定位结果)
 
-**3.获取定位日志接口**
+#### **3.获取定位日志接口**
 
 **request information**
 GET
@@ -199,7 +210,7 @@ json
 }
 ```
 
-**4.获取实验房间信息接口**
+#### **4.获取实验房间信息接口**
 
 **request information**
 GET
@@ -219,7 +230,7 @@ message:
 }
 ```
 
-**5.获取手机型号接口**
+#### **5.获取手机型号接口**
 
 **request information**
 GET
@@ -234,5 +245,19 @@ HttpResponseMessage
 }
 ```
 
+### 界面展示
+#### app
+离线采集页面：
+![enter description here][1]
+  
+  定位页面：
+  ![enter description here][2]
+  
+  #### server
+  定位统计分析页面：
+  ![enter description here][3]
 
 
+  [1]: ./images/collection.png "collection.png"
+  [2]: ./images/location.png "location.png"
+  [3]: ./images/1494584250146.jpg "1494584250146.jpg"
