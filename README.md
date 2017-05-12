@@ -255,9 +255,9 @@ HttpResponseMessage
   
   #### server
   定位统计分析页面：
-  ![enter description here][3]
+![enter description here][3]
 
 
-  [1]: ./images/collection.png "collection.png"
-  [2]: ./images/location.png "location.png"
-  [3]: ./images/1494584250146.jpg "1494584250146.jpg"
+  [1]: ./image/collection.png "collection.png"
+  [2]: ./image/location.png "location.png"
+  [3]: ./images/log.png "log.png"
