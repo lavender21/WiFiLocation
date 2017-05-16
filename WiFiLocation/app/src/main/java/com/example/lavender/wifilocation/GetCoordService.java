@@ -78,8 +78,17 @@ public class GetCoordService extends Service implements SensorEventListener {
         // 停止检测步数
         unregisterDetector();
         Toast.makeText(this,"采集完毕",Toast.LENGTH_SHORT).show();
+        sendStepCount();
         SetCoordZero();
         super.onDestroy();
+    }
+
+    // 返回当前步数
+    private void sendStepCount() {
+        Intent intent = new Intent();
+        intent.setAction("step");
+        intent.putExtra("stepCount",stepDisplayer.getmCount());
+        sendBroadcast(intent);
     }
 
     public GetCoordService() {

@@ -26,7 +26,7 @@ import static com.example.lavender.wifilocation.Common.toJson;
 
 
 public class Main2Activity extends AppCompatActivity implements View.OnClickListener {
-    private Button btnLocation, btnScan, btnCollection;
+    private Button btnLocation, btnScan, btnCollection,btnSetBaseData;
     private String apData;
     private TextView showData, txtCoord, txtRoom,txtAlgorithm;
     private EditText edtActualCoord;
@@ -63,6 +63,8 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         btnScan.setOnClickListener(this);
         btnCollection = (Button) findViewById(R.id.btnCollection);
         btnCollection.setOnClickListener(this);
+        btnSetBaseData = (Button)findViewById(R.id.btnSetBaseData);
+        btnSetBaseData.setOnClickListener(this);
         showData = (TextView) findViewById(R.id.showRssiData);
         txtCoord = (TextView) findViewById(R.id.textCoord);
         txtRoom = (TextView) findViewById(R.id.txtRoom);
@@ -119,6 +121,11 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             case R.id.btnCollection:
                 Intent intent1 = new Intent(Main2Activity.this, GetRssiActivity.class);
                 startActivity(intent1);
+                break;
+            case R.id.btnSetBaseData:
+                Intent intent2 = new Intent(Main2Activity.this, GetStepLengthActivity.class);
+                startActivity(intent2);
+                break;
         }
     }
 

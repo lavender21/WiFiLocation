@@ -76,6 +76,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/textCoord" />
 
+        <Button
+            android:text="配置基本数据"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnSetBaseData" />
+
         <TextView
             android:text=""
             android:layout_width="match_parent"
