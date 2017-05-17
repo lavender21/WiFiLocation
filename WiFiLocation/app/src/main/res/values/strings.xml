@@ -15,4 +15,5 @@
         <item>KNN</item>
         <item>模糊集</item>
     </string-array>
+    <string name="ok">确认</string>
 </resources>

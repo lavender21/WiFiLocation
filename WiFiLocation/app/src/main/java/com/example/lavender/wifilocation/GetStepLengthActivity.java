@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +20,22 @@ import java.util.TimerTask;
 public class GetStepLengthActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Button btnStart,btnEnd;
-    private double lat1,lat2,lnt1,lnt2,distance,stepLength;
+    private double lat1;
+    private double lat2;
+    private double lnt1;
+    private double lnt2;
+    private double distance;
+
+    @Override
+    protected void onStop() {
+        SharedPreferences sharedPreferences = getSharedPreferences("wifiLocationData",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("stepLength",Math.round(stepLength*100)/100D+"");
+        editor.commit();
+        super.onStop();
+    }
+
+    private double stepLength;
     private int stepCount;
     private TextView txtStepLenght,txtLongitude,txtTitle,txtLatitude,txtStepCount;
 

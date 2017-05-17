@@ -3,9 +3,12 @@ package com.example.lavender.wifilocation;
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,13 +25,14 @@ import org.json.JSONObject;
 
 import java.util.Dictionary;
 
+import static android.app.PendingIntent.getActivity;
 import static com.example.lavender.wifilocation.Common.toJson;
 
 
 public class Main2Activity extends AppCompatActivity implements View.OnClickListener {
     private Button btnLocation, btnScan, btnCollection,btnSetBaseData;
     private String apData;
-    private TextView showData, txtCoord, txtRoom,txtAlgorithm;
+    private TextView showData, txtCoord, txtRoom,txtAlgorithm,txtStepLength;
     private EditText edtActualCoord;
     private Spinner spinner, spinnerAlgorithm;
     private String room_id, algorithm;
@@ -69,6 +73,16 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         txtCoord = (TextView) findViewById(R.id.textCoord);
         txtRoom = (TextView) findViewById(R.id.txtRoom);
         txtAlgorithm = (TextView)findViewById(R.id.txtAlgorithm);
+        txtStepLength = (TextView)findViewById(R.id.txtStepLength);
+        SharedPreferences sharedPreferences = getSharedPreferences("wifiLocationData",MODE_PRIVATE);
+        if (!sharedPreferences.contains("stepLength"))
+        {
+            txtStepLength.setText(txtStepLength.getText()+sharedPreferences.getString("stepLength",""));
+        }
+        else
+        {
+            alertMessage();
+        }
         edtActualCoord = (EditText) findViewById(R.id.edtActualCoord);
         spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -100,6 +114,21 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+    }
+
+    private void alertMessage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Main2Activity.this);
+        builder.setMessage("您的步长信息未采集,请先去采集步长信息");
+        builder.setCancelable(false);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intentStep = new Intent(Main2Activity.this,GetStepLengthActivity.class);
+                startActivity(intentStep);
+            }
+        });
+        builder.create();
+        builder.show();
     }
 
     @Override
@@ -152,4 +181,5 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         });
         http.execute("POST", http.LOCATION, json.toString());
     }
+
 }

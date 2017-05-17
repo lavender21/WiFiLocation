@@ -1,10 +1,14 @@
 package com.example.lavender.wifilocation;
 
+import android.content.SharedPreferences;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.util.Date;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by lavender on 2017/3/29.
