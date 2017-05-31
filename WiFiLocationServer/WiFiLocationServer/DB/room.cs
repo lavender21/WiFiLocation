@@ -76,7 +76,7 @@ namespace WiFiLocationServer.DB
         public Models.Room GetModel(int id)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select top 1 id,model_name");
+            strSql.Append("select *");
             strSql.Append(" from tb_room");
             strSql.Append(" where id=@id");
             SqlParameter[] parameters = {

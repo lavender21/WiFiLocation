@@ -13,6 +13,7 @@ namespace WiFiLocationServer.Models
         public string addtime { set; get; }
         public int rssi { set; get; }
         public int flag { set; get; }
+        public string actual_coord { set; get; }
 
     }
 }

@@ -94,7 +94,7 @@ namespace WiFiLocationServer.DB
         public Models.data_test GetModel(int id)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("select top 1 id,coord,memory,addtime,rssi,flag");
+            strSql.Append("select top 1 id,coord,actual_coord,memory,addtime,rssi,flag");
             strSql.Append(" from tb_sensor_wifi_test");
             strSql.Append(" where id=@id");
             SqlParameter[] parameters = {
@@ -133,6 +133,10 @@ namespace WiFiLocationServer.DB
                 {
                     model.coord = row["coord"].ToString();
                 }
+                if (row["actual_coord"] != null && row["actual_coord"].ToString() != "")
+                {
+                    model.coord = row["actual_coord"].ToString();
+                }
                 if (row["memory"] != null && row["memory"].ToString() != "")
                 {
                     model.memory = row["memory"].ToString();
@@ -152,6 +156,23 @@ namespace WiFiLocationServer.DB
 
             }
             return model;
+        }
+
+        ///<summary>
+        /// 获取所有备注列表
+        /// </summary> 
+        public DataSet GetMemoryList()
+        {
+            string sql = "select id,memory from tb_sensor_wifi_test where flag = 1";
+            DataSet ds = DbHelperSQL.Query(sql);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                return ds;
+            }
+            else
+            {
+                return null;
+            }
         }
         #endregion
 

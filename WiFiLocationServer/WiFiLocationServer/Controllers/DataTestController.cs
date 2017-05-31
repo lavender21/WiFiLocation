@@ -22,7 +22,7 @@ namespace WiFiLocationServer.Controllers
         // Get /api/DataTest/id
         [HttpGet]
         public Models.data_test GetById(int id)
-        {
+        {   
             Models.data_test model = db.GetModel(id);
             var response = Request.CreateResponse();
             if (model != null)
@@ -63,6 +63,12 @@ namespace WiFiLocationServer.Controllers
             }
             return response;
         }
+
+        [HttpGet]
+        public DataSet GetIdList()
+        {
+            return  db.GetMemoryList();
+        }       
 
     }
 }
