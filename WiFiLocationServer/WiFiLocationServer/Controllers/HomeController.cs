@@ -20,5 +20,15 @@ namespace WiFiLocationServer.Controllers
         {
             return View();
         }
+
+        public ActionResult CoordDataShow()
+        {
+            return View();
+        }
+
+        public ActionResult Login()
+        {
+            return View();
+        }
     }
 }
