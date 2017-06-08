@@ -36,6 +36,11 @@ function convertData(data) {
         var location = result[1][index];
         return Math.sqrt((item[0] - location[0])*(item[0] - location[0]) + (item[1] - location[1])*(item[1] - location[1])).toFixed(2);
     });
+    result[1] = result[1].map(function (item, index) {
+        item.push(result[2][index]);
+        return item;
+    })
+    console.log(result);
     return result;
 }
 
@@ -62,27 +67,45 @@ function generatePicture(data) {
             bottom:"10%"
         },
         legend: {
-            data: ['定位值','实际值']
+            data: ['定位值']
         },
         xAxis: {
-            name:'x(cm)',
-            min: 0,
-            max:240
+            splitLine: {
+                lineStyle: {
+                    type: 'dashed'
+                }
+            }
         },
         yAxis: {
-            name:'y(cm)',
-            min: 0,
-            max:720
+            splitLine: {
+                lineStyle: {
+                    type: 'dashed'
+                }
+            },
+            scale: true
         },
         series: [{
             name: '定位值',
             type: 'scatter',
-            data: dataList[1]
-        },
-        {
-            name: '实际值',
-            type: 'scatter',
-            data: dataList[0]
+            data: dataList[1],
+            symbolSize: function (data) {
+                console.log(data);
+                return Math.sqrt(data[2])*1.5;
+            },
+            itemStyle: {
+                normal: {
+                    shadowBlur: 10,
+                    shadowColor: 'rgba(120, 36, 50, 0.5)',
+                    shadowOffsetY: 5,
+                    color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
+                        offset: 0,
+                        color: 'rgb(251, 118, 123)'
+                    }, {
+                        offset: 1,
+                        color: 'rgb(204, 46, 72)'
+                    }])
+                }
+            }
         }
         ],
         backgroundColor: "#fff"
@@ -104,24 +127,13 @@ function generatePicture(data) {
         },
         xAxis:[ {
             type: 'category',
-            name:'定位坐标',
+            name:'定位点',
             data: dataList[1],
             position: 'bottom',
             axisLine: {
                 onZero: false,
                 lineStyle: {
                     color: '#668899'
-                }
-            },
-        }, {
-            type: 'category',
-            name: '实际坐标',
-            data: dataList[0],
-            position: 'top',
-            axisLine: {
-                onZero: false,
-                lineStyle: {
-                    color: '#ff7575'
                 }
             },
         }],

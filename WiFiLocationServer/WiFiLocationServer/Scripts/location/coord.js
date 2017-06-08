@@ -78,12 +78,18 @@ function generatePicture(data) {
             data: ['步行坐标']
         },
         xAxis: {
-            name: 'x(cm)',
-            type:'value'
+            name: 'E',
+            type: 'value',
+            min: -1000,
+            max:1000,
+            interval:100
         },
         yAxis: {
-            name: 'y(cm)',
-            type:'value'
+            name: 'N',
+            type: 'value',
+            min: -1000,
+            max: 1000,
+            interval:100
         },
         series: [{
             name: '步行坐标',

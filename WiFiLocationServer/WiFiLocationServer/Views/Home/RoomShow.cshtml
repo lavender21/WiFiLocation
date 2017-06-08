@@ -7,18 +7,13 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>步行轨迹坐标</title>
+    <title>房间实时监控</title>
     <link rel="stylesheet" href="../../Content/bootstrap.css" />
     <style>
         body {
             background: #eee;
         }
 
-        .container .picture {
-            height: 500px;
-            margin-top: 20px;
-            display: none;
-        }
         .top {
             position: fixed;
             top: 0;
@@ -64,6 +59,12 @@
         .nav-pills > li > a {
             border-radius: 0px;
         }
+        .map{
+            border:1px solid #000;
+        }
+        .count{
+            display:none;
+        }
     </style>
 </head>
 <body>
@@ -75,25 +76,26 @@
         <div class="left_nav">
             <ul class="nav nav-pills nav-stacked">
                 <li><a href="/Home/LocationShow">定位精度分析</a></li>
-                <li><a href="/Home/RoomShow">房间实时监控</a></li>
-                <li class="active"><a href="/Home/CoordDataShow">步行轨迹分析</a></li>
+                <li class="active"><a href="/Home/RoomShow">房间实时监控</a></li>
+                <li><a href="/Home/CoordDataShow">步行轨迹分析</a></li>
             </ul>
         </div>
         <div class="right">
-            <h1 class="text-center">步行轨迹展示</h1>
+            <h1 class="text-center">房间实时监控</h1>
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 col-md-offset-2">
-                        <select id="memory" class="form-control"></select>
+                        <select id="room" class="form-control"></select>
                     </div>
                     <div class="col-md-2">
-                        <button class="btn-primary btn" id="check">查看轨迹</button>
+                        <button class="btn-primary btn" id="check">查看房间</button>
+                    </div> 
+                    <div class="col-md-2 count">
+                        <p>当前房间人数：<span id="people">0</span></p>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-10 col-md-offset-1 picture" id="coordShow">
-
-                    </div>
+                <div>
+                        <canvas id="myMap" style="background:#eee;margin:20px auto;display:none;"></canvas>
                 </div>
             </div>
         </div>
@@ -102,7 +104,7 @@
    
     <script src="../../Scripts/jquery-1.10.2.min.js" type="text/javascript"></script>
     <script src="../../Scripts/echarts.common.min.js" type="text/javascript"></script>
-    <script src="../../Scripts/location/coord.js" type="text/javascript"></script>
+    <script src="../../Scripts/location/room.js" type="text/javascript"></script>
     <script>
         $('#exit').click(function () {
             window.location.replace("/Home/Login");

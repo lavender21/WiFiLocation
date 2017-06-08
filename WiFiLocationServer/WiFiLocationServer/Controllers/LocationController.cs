@@ -78,7 +78,8 @@ namespace WiFiLocationServer.Controllers
             locationLogModel.actual_coord = value["actual_coord"].ToString();
             locationLogModel.room_id = int.Parse(value["room_id"].ToString());
             locationLogModel.mobile_id = int.Parse(value["mobile_id"].ToString());
-            locationLogModel.location_algorithm = int.Parse(algorithm);  
+            locationLogModel.location_algorithm = int.Parse(algorithm);
+            locationLogModel.location_time = GetTimeStamp();
             if (locationLogDb.Add(locationLogModel) > 0)
             {
                 response.Content = new StringContent(result, Encoding.UTF8);
@@ -90,6 +91,12 @@ namespace WiFiLocationServer.Controllers
 
             return response;
         }
+
+        private static string GetTimeStamp()
+        {
+            TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return Convert.ToInt64(ts.TotalSeconds).ToString();
+        } 
 
         private Dictionary<int, DataTable> convertAllRssiList(DataSet ds)
         {

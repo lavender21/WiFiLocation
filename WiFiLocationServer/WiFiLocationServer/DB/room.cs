@@ -95,6 +95,16 @@ namespace WiFiLocationServer.DB
             }
         }
 
+        public DataSet GetRoomDetial(int id)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select *");
+            strSql.Append(" from tb_room");
+            strSql.Append(" where id="+id);
+            strSql.Append(";select id,actual_coord,location_coord from tb_location_log where room_id="+ id + " and location_time > " + (int.Parse(GetTimeStamp()) - 300));
+            return  DbHelperSQL.Query(strSql.ToString());
+        }
+
         public DataSet GetRoomList()
         {
             string sql = "select id,room_name from tb_room";
@@ -152,6 +162,12 @@ namespace WiFiLocationServer.DB
             }
             return model;
         }
+
+        private static string GetTimeStamp()
+        {
+            TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return Convert.ToInt64(ts.TotalSeconds).ToString();
+        } 
         #endregion
 
 

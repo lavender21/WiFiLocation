@@ -14,5 +14,6 @@ namespace WiFiLocationServer.Models
         public int mobile_id { set; get; }
         public int location_algorithm { set; get; }
         public string memory { set; get; }
+        public string location_time { set; get; }
     }
 }

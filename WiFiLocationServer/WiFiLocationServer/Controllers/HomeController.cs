@@ -30,5 +30,10 @@ namespace WiFiLocationServer.Controllers
         {
             return View();
         }
+
+        public ActionResult RoomShow()
+        {
+            return View();
+        }
     }
 }

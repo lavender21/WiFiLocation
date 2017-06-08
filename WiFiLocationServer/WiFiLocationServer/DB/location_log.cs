@@ -35,20 +35,22 @@ namespace WiFiLocationServer.DB
         public int Add(Models.location_log model)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into tb_location_log(actual_coord,location_coord,room_id,mobile_id,location_algorithm)");
-            strSql.Append(" values (@actual_coord,@location_coord,@room_id,@mobile_id,@location_algorithm)");
+            strSql.Append("insert into tb_location_log(actual_coord,location_coord,room_id,mobile_id,location_algorithm,location_time)");
+            strSql.Append(" values (@actual_coord,@location_coord,@room_id,@mobile_id,@location_algorithm,@location_time)");
             SqlParameter[] parameters = {
                     new SqlParameter("@actual_coord", SqlDbType.VarChar,10),
                     new SqlParameter("@location_coord", SqlDbType.VarChar, 10),
                     new SqlParameter("@room_id",SqlDbType.Int),
                     new SqlParameter("@mobile_id",SqlDbType.Int),
-                    new SqlParameter("location_algorithm", SqlDbType.Int)
+                    new SqlParameter("@location_algorithm", SqlDbType.Int),
+                    new SqlParameter("@location_time", SqlDbType.VarChar,50)
                                         };
             parameters[0].Value = model.actual_coord;
             parameters[1].Value = model.location_coord;
             parameters[2].Value = model.room_id;
             parameters[3].Value = model.mobile_id;
             parameters[4].Value = model.location_algorithm;
+            parameters[5].Value = model.location_time;
 
             object obj = DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
             model.id = Convert.ToInt32(obj);
