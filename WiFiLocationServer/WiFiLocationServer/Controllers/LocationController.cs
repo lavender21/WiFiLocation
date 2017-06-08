@@ -66,11 +66,11 @@ namespace WiFiLocationServer.Controllers
             var result = "";
             if  (algorithm == "0")
             {
-                result = location.KNNalgorithm(10, rssiDictionary, allRssiList);
+                result = location.KNNalgorithm(4, rssiDictionary, allRssiList);
             }
             else
             {
-                result = location.MHJalgorithm(10, rssiDictionary, allRssiList);
+                result = location.MHJalgorithm(4, rssiDictionary, allRssiList);
             }
             DB.location_log locationLogDb = new DB.location_log();
             Models.location_log locationLogModel = new Models.location_log();
