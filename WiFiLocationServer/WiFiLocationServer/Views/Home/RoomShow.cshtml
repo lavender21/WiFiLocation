@@ -65,6 +65,30 @@
         .count{
             display:none;
         }
+        .tuli {
+            margin: 20px auto;
+            display:none;
+        }
+        .hasData,.noData{
+            margin:10px;
+        }
+        .hasData::before,.noData::before{
+            content:' ';
+            width:20px;
+            height:20px;
+            vertical-align:middle;
+            position:relative;
+            display:inline-block;
+        }
+        .hasData::before {
+            background: #ff0;
+        }
+        .noData::before{
+            background:#dde;
+        }
+        #back{
+            display:none;
+        }
     </style>
 </head>
 <body>
@@ -84,18 +108,30 @@
             <h1 class="text-center">房间实时监控</h1>
             <div class="container">
                 <div class="row">
-                    <div class="col-md-6 col-md-offset-2">
-                        <select id="room" class="form-control"></select>
+                    <div class="col-md-3 col-md-offset-2">
+                        <select id="build" class="form-control">
+                            <option value="6">教六</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 ">
+                        <select id="floor" class="form-control">
+                            <option value="12">12层</option>
+                        </select>
                     </div>
                     <div class="col-md-2">
-                        <button class="btn-primary btn" id="check">查看房间</button>
+                        <button class="btn-primary btn" id="check">查看</button>
+                        <button class="btn-primary btn" id="back">返回</button>
                     </div> 
                     <div class="col-md-2 count">
                         <p>当前房间人数：<span id="people">0</span></p>
                     </div>
                 </div>
                 <div>
-                        <div id="myMap" style="background:#eee;margin:20px auto;display:none;height:500px;"></div>
+                        <canvas id="myMap" style="margin:20px auto;display:none;"></canvas>
+                        <div class="tuli"><span class="hasData">有数据</span><span class="noData">无数据</span></div>
+                </div>
+                <div>
+                    <div id="myRoom" style="margin:20px auto;display:none;height:500px;"></div>
                 </div>
             </div>
         </div>

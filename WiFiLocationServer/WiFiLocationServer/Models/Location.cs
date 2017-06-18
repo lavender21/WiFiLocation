@@ -51,8 +51,7 @@ namespace WiFiLocationServer.Models
         public string MHJalgorithm(int k, Dictionary<string, int> rssiList, Dictionary<int, DataTable> coordDictionary)
         {
             Dictionary<int, double> collectionSi = new Dictionary<int, double>();
-            foreach (var item in coordDictionary)
-            {
+            foreach (var item in coordDictionary){
                 DataTable dt = item.Value;
                 Dictionary<string,List<int>> list = convertList(rssiList, dt);
                 double innerProduct = calculateVectorInnerProduct(list["T"], list["F"]);
@@ -66,10 +65,8 @@ namespace WiFiLocationServer.Models
                                      orderby pair.Value descending
                                      select pair;
             string idList = "";
-            foreach (var item in sortedcollectionSi)
-            {
-                if (k-- == 0)
-                {
+            foreach (var item in sortedcollectionSi){
+                if (k-- == 0){
                     break;
                 }
                 idList += item.Key + ",";

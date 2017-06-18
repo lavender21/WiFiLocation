@@ -105,6 +105,12 @@ namespace WiFiLocationServer.DB
             return  DbHelperSQL.Query(strSql.ToString());
         }
 
+        public DataSet GetRoomBySome(string where)
+        {
+            string sql = "select * from tb_room where" + where;
+            return DbHelperSQL.Query(sql);
+        }
+
         public DataSet GetRoomList()
         {
             string sql = "select id,room_name from tb_room";
