@@ -64,13 +64,14 @@ namespace WiFiLocationServer.Controllers
 
             Location location = new Location();
             var result = "";
+            var k = 4;  // k的取值
             if  (algorithm == "0")
             {
-                result = location.KNNalgorithm(4, rssiDictionary, allRssiList);
+                result = location.KNNalgorithm(k, rssiDictionary, allRssiList);
             }
             else
             {
-                result = location.MHJalgorithm(4, rssiDictionary, allRssiList);
+                result = location.MHJalgorithm(k, rssiDictionary, allRssiList);
             }
             DB.location_log locationLogDb = new DB.location_log();
             Models.location_log locationLogModel = new Models.location_log();
@@ -78,6 +79,7 @@ namespace WiFiLocationServer.Controllers
             locationLogModel.actual_coord = value["actual_coord"].ToString();
             locationLogModel.room_id = int.Parse(value["room_id"].ToString());
             locationLogModel.mobile_id = int.Parse(value["mobile_id"].ToString());
+            locationLogModel.flag = k;
             locationLogModel.location_algorithm = int.Parse(algorithm);
             locationLogModel.location_time = GetTimeStamp();
             if (locationLogDb.Add(locationLogModel) > 0)
