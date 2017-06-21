@@ -3,8 +3,8 @@
     $.ajax({
         url: "/api/LocationLog/?room=" + data.room + "&mobile=" + data.mobile + "&algorithm=" + data.algorithm,
         success: function (data) {
-            if (data && data.hasOwnProperty('ds') && data.ds.length > 0 ){
-                generatePicture(data.ds);
+            if (data && data.hasOwnProperty('ds') && data.ds.length > 0 && data.hasOwnProperty('ds1') && data.ds.length > 0){
+                generatePicture(data);
             }
             else {
                 alert("数据库中无数据！");
@@ -26,10 +26,12 @@ function getSelectData() {
 
 function convertData(data) {
     var result = [];
-   result[0] =  data.map(function (item) {
+    var log = data.ds;
+    var coordList = data.ds1;
+   result[0] =  log.map(function (item) {
        return item.actual_coord.split(',');
    });
-    result[1] = data.map(function (item) {
+    result[1] = log.map(function (item) {
         return item.location_coord.split(',');
     });
     result[2] = result[0].map(function (item,index) {
@@ -39,8 +41,14 @@ function convertData(data) {
     result[1] = result[1].map(function (item, index) {
         item.push(result[2][index]);
         return item;
+    });
+    result[0] = result[0].map(function (item, index) {
+        item.push(result[2][index]);
+        return item;
     })
-    console.log(result);
+    result[3] = coordList.map(function (item) {
+        return item.coord.split('，');
+    });
     return result;
 }
 
@@ -57,7 +65,7 @@ function generatePicture(data) {
     // 指定图表的配置项和数据
     var option1 = {
         title: {
-            text: '定位坐标与实际坐标分布图'
+            text: '参考点与定位坐标点分布图'
         },
         tooltip: {},
         grid:{
@@ -67,7 +75,7 @@ function generatePicture(data) {
             bottom:"10%"
         },
         legend: {
-            data: ['定位值']
+            data: ['参考点','定位点']
         },
         xAxis: {
             splitLine: {
@@ -85,12 +93,30 @@ function generatePicture(data) {
             scale: true
         },
         series: [{
-            name: '定位值',
+            name: '参考点',
             type: 'scatter',
-            data: dataList[1],
+            data: dataList[3],
+            itemStyle: {
+                normal: {
+                    shadowBlur: 10,
+                    shadowColor: 'rgba(25, 100, 150, 0.5)',
+                    shadowOffsetY: 5,
+                    color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
+                        offset: 0,
+                        color: 'rgb(129, 227, 238)'
+                    }, {
+                        offset: 1,
+                        color: 'rgb(25, 183, 207)'
+                    }])
+                }
+            }
+        },
+        {
+            name: '定位点',
+            type: 'scatter',
+            data: dataList[0],
             symbolSize: function (data) {
-                console.log(data);
-                return Math.sqrt(data[2])*1.5;
+                return Math.sqrt(data[2]) * 1.5;
             },
             itemStyle: {
                 normal: {

@@ -118,18 +118,13 @@ namespace WiFiLocationServer.DB
             }
         }
 
-        public DataSet GetlocationLogList(string where)
+        public DataSet GetlocationLogList(int room,int mobile,int algorithm)
         {
-            string sql = "select actual_coord,location_coord from tb_location_log where " + where; 
-            DataSet ds = DbHelperSQL.Query(sql);
-            if (ds.Tables[0].Rows.Count > 0)
-            {
-                return ds;
-            }
-            else
-            {
-                return null;
-            }
+            string where1 = "room_id = " + room + " and mobile_id = " + mobile + " and location_algorithm = " + algorithm + " and memory is null and flag = 4";
+            string where2 = "room_id = " + room + " and mobile_id = " + mobile;
+            string sql = "select actual_coord,location_coord from tb_location_log where " + where1;
+            sql += ";select coord from tb_wifi_fingerprint  where id in (select coord_id from tb_wifi_rssi where " + where2 + ")";
+            return DbHelperSQL.Query(sql);
         }
         #endregion
 
