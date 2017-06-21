@@ -35,8 +35,8 @@ namespace WiFiLocationServer.DB
         public int Add(Models.location_log model)
         {
             StringBuilder strSql = new StringBuilder();
-            strSql.Append("insert into tb_location_log(actual_coord,location_coord,room_id,mobile_id,location_algorithm,location_time,flag)");
-            strSql.Append(" values (@actual_coord,@location_coord,@room_id,@mobile_id,@location_algorithm,@location_time,@flag)");
+            strSql.Append("insert into tb_location_log(actual_coord,location_coord,room_id,mobile_id,location_algorithm,location_time,flag,mobile_mac)");
+            strSql.Append(" values (@actual_coord,@location_coord,@room_id,@mobile_id,@location_algorithm,@location_time,@flag,@mobile_mac)");
             SqlParameter[] parameters = {
                     new SqlParameter("@actual_coord", SqlDbType.VarChar,10),
                     new SqlParameter("@location_coord", SqlDbType.VarChar, 10),
@@ -44,7 +44,8 @@ namespace WiFiLocationServer.DB
                     new SqlParameter("@mobile_id",SqlDbType.Int),
                     new SqlParameter("@location_algorithm", SqlDbType.Int),
                     new SqlParameter("@location_time", SqlDbType.VarChar,50),
-                    new SqlParameter("@flag",SqlDbType.Int)
+                    new SqlParameter("@flag",SqlDbType.Int),
+                    new SqlParameter("@mobile_mac",SqlDbType.VarChar,20)
                                         };
             parameters[0].Value = model.actual_coord;
             parameters[1].Value = model.location_coord;
@@ -53,6 +54,7 @@ namespace WiFiLocationServer.DB
             parameters[4].Value = model.location_algorithm;
             parameters[5].Value = model.location_time;
             parameters[6].Value = model.flag;
+            parameters[7].Value = model.mobile_mac;
 
             object obj = DbHelperSQL.ExecuteSql(strSql.ToString(), parameters);
             model.id = Convert.ToInt32(obj);

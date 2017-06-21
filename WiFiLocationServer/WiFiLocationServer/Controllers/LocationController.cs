@@ -79,6 +79,7 @@ namespace WiFiLocationServer.Controllers
             locationLogModel.actual_coord = value["actual_coord"].ToString();
             locationLogModel.room_id = int.Parse(value["room_id"].ToString());
             locationLogModel.mobile_id = int.Parse(value["mobile_id"].ToString());
+            locationLogModel.mobile_mac = value["mobile_mac"].ToString();
             locationLogModel.flag = k;
             locationLogModel.location_algorithm = int.Parse(algorithm);
             locationLogModel.location_time = GetTimeStamp();

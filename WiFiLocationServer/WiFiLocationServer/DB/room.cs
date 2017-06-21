@@ -101,7 +101,7 @@ namespace WiFiLocationServer.DB
             strSql.Append("select *");
             strSql.Append(" from tb_room");
             strSql.Append(" where id="+id);
-            strSql.Append(";select id,actual_coord,location_coord from tb_location_log where room_id="+ id + " and location_time > " + (int.Parse(GetTimeStamp()) - 300));
+            strSql.Append(";select id,actual_coord,location_coord,mobile_mac from tb_location_log where room_id="+ id + " and location_time > " + (int.Parse(GetTimeStamp()) - 300));
             return  DbHelperSQL.Query(strSql.ToString());
         }
 

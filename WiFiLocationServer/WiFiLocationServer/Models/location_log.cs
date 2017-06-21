@@ -16,5 +16,6 @@ namespace WiFiLocationServer.Models
         public string memory { set; get; }
         public string location_time { set; get; }
         public int flag { set; get; }
+        public string mobile_mac { set; get; }
     }
 }
