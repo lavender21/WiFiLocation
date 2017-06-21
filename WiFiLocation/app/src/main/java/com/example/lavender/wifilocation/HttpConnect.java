@@ -31,6 +31,8 @@ public class HttpConnect extends AsyncTask<String,String,String> {
     // 服务器端IP地址
     public static final String IP = "192.168.43.249";
     public static final String IP2 = "192.168.191.1";
+    public static final String IP3 = "192.168.155.1";
+
     public static final String BASE_URL="http://"+IP2+":8080";
 //    public static final String BASE_URL = "https://www.baidu.com/";
     public static final String TAG = "HttpConnect";
@@ -80,12 +82,6 @@ public class HttpConnect extends AsyncTask<String,String,String> {
                 break;
             case "POST":
                 getData = HttpPost(url,data);
-                break;
-            case "DELETE":
-                temp = HttpDelete(url);
-                break;
-            case  "PUT":
-                temp = HttpPut(url);
                 break;
         }
         return getData;
@@ -198,16 +194,6 @@ public class HttpConnect extends AsyncTask<String,String,String> {
             }
         }
         return response.toString();
-    }
-
-    // delete
-    public boolean HttpDelete(String url){
-        return false;
-    }
-
-    // put
-    public boolean HttpPut(String url){
-        return  false;
     }
 
     //    解析json，获取键值对 转换成get的参数

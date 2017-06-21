@@ -22,4 +22,18 @@ public class ExampleUnitTest {
 
         assertEquals("",distance,3608,0);
     }
+
+    @Test
+    public void calculate_coord_isCorrect() throws Exception{
+        SensorTestActivity sensorTestActivity = new SensorTestActivity();
+        int len = 100;
+        float degree = 90;
+        int[] coordInit = {0,0,0};
+        int[] coordThis = {0,0,0};
+        int[] coordPre = {0,0,0};
+        sensorTestActivity.GetCoord(len,degree);
+
+        assertEquals("",coordThis[0],0,0);
+        assertEquals("",coordThis[1],100,0);
+    }
 }

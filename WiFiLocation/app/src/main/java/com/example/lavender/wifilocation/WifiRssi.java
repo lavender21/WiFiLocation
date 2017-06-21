@@ -11,7 +11,7 @@ import java.lang.reflect.Array;
  */
 
 public class WifiRssi {
-    private final int MAX = 100;   // 数组的最大长度
+    private final int MAX = 300;   // 数组的最大长度
     private String mac = "";             // 无线ap的mac
     private int[] rssi = new int[MAX];   // 存放rssi的数组
     private int argRssi = 0;             // 求得的rssi平均值
@@ -50,18 +50,16 @@ public class WifiRssi {
     }
 
     // rssi数组求平均
-    public void calculateRssiArg()
-    {
+    public void calculateRssiArg() {
         int sum = 0;
         if (this.Size <= 0)  // 数组为空直接结束
         {
             return;
         }
-        for(int i=0;i<this.Size;i++)
-        {
+        for (int i = 0; i < this.Size; i++) {
             sum += this.rssi[i];
         }
-        this.argRssi = sum/this.Size;
+        this.argRssi = sum / this.Size;
     }
 
     //  将mac和argrssi组成接口所需格式 例如：[23,"ad:aa:2d:d1:2d:3b"]

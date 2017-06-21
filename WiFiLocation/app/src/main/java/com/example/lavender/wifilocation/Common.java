@@ -1,25 +1,45 @@
 package com.example.lavender.wifilocation;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Created by lavender on 2017/3/29.
+ * 该类用于一些各个页面都会用到的公共的方法
  */
 
 public class Common {
-
-    // 获取手机型号
-    public static int getMobileModel()
-    {
-        int num = 3;
+    // 设置手机型号
+    public static int getMobileModel() {
+        int num = 0;
+        String mobile = Build.BRAND;
+        HashMap hm = new HashMap();
+        hm.put("HUAWEI", "2");
+        hm.put("XIAOMI", "3");
+        hm.put("OPPO", "6");
+        Iterator iter = hm.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            String key = entry.getKey().toString();
+            int val = Integer.parseInt(entry.getValue().toString());
+            Pattern reg = Pattern.compile(key,Pattern.CASE_INSENSITIVE);
+            Matcher matcher = reg.matcher(mobile);
+            if (matcher.find()) {
+                num = val;
+            }
+        }
         return num;
     }
 
@@ -44,6 +64,4 @@ public class Common {
             return null;
         }
     }
-
-
 }

@@ -27,10 +27,11 @@ public class GetRSSIService extends Service {
     public ArrayList<String> wifiMacList = new ArrayList<String>();
     // 发送至服务器的数据
     public JSONObject sendToServerData = new JSONObject();
+
     @Override
     public void onCreate() {
         super.onCreate();
-        Toast.makeText(this,"开始扫描信号强度",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "开始扫描信号强度", Toast.LENGTH_SHORT).show();
         // 清空当前数据
         wifiList.clear();
         wifiMacList.clear();
@@ -51,7 +52,7 @@ public class GetRSSIService extends Service {
         stopTimer();
         // 将数据发送到前台显示
         sendToRssiActivity();
-        Toast.makeText(this,"wifi信号强度扫描结束",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "wifi信号强度扫描结束", Toast.LENGTH_SHORT).show();
     }
 
     public GetRSSIService() {
@@ -72,39 +73,34 @@ public class GetRSSIService extends Service {
                 getWifiRssi();
             }
         };
-        timer.schedule(task,1000,3000);
+        timer.schedule(task, 1000, 3000);
     }
 
     // 停止计时器
-    private void stopTimer(){
+    private void stopTimer() {
         timer.cancel();
     }
 
     // 获取wifi信号强度
-    private void getWifiRssi(){
+    private void getWifiRssi() {
         if (!wifiManager.isWifiEnabled()) {
             wifiManager.setWifiEnabled(true);
         }
-        Log.i("WIFI","get wifiManager");
+        Log.i("WIFI", "get wifiManager");
         // 获取到周围的wifi列表
         List<ScanResult> scanResults = wifiManager.getScanResults();
-        Log.i("WIFI","get scanResults");
-        for (ScanResult scanResult : scanResults)
-        {
+        Log.i("WIFI", "get scanResults");
+        for (ScanResult scanResult : scanResults) {
             WifiRssi wifiRssi = new WifiRssi();
             if (scanResult.SSID.equals("iXAUT"))  // 目前只获取iXAUT的wifi是因为这些路由器是固定的，便于实验
             {
                 // 判断wifiList中是否有该ap的Rssi对象
-                if(wifiMacList.contains(scanResult.BSSID))
-                {
+                if (wifiMacList.contains(scanResult.BSSID)) {
                     WifiRssi wifiRssi1 = getWifiRssi(scanResult.BSSID);
-                    if(!wifiRssi1.addRssi(scanResult.level))
-                    {
-                        Log.e("WIFI","addRssi error");
+                    if (!wifiRssi1.addRssi(scanResult.level)) {
+                        Log.e("WIFI", "addRssi error");
                     }
-                }
-                else
-                {
+                } else {
                     // 将新的Rssi对象添加进wifi列表
                     wifiRssi.setMacValue(scanResult.BSSID);
                     if (wifiRssi.addRssi(scanResult.level)) {
@@ -115,20 +111,17 @@ public class GetRSSIService extends Service {
             }
         }
         sendToRssiActivity();
-}
+    }
 
     // 将获取的信号强度按照json格式返回给Activity
-    private void sendToRssiActivity()
-    {
+    private void sendToRssiActivity() {
         sendToServerData = new JSONObject();
-        for(int i=0;i<wifiList.size();i++)
-        {
+        for (int i = 0; i < wifiList.size(); i++) {
             WifiRssi wifiRssi = wifiList.get(i);
             wifiRssi.calculateRssiArg();
             try {
-                sendToServerData.put("ap"+i,wifiRssi.getApiFormat());
-            }catch (JSONException e)
-            {
+                sendToServerData.put("ap" + i, wifiRssi.getApiFormat());
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
@@ -136,19 +129,16 @@ public class GetRSSIService extends Service {
         String data = gson.toJson(json);*/
         Intent intent = new Intent();
         intent.setAction("apData");
-        intent.putExtra("ap",sendToServerData.toString());
+        intent.putExtra("ap", sendToServerData.toString());
         sendBroadcast(intent);
     }
 
     // 通过mac地址获取wifiRssi对象
-    private  WifiRssi getWifiRssi(String mac)
-    {
+    private WifiRssi getWifiRssi(String mac) {
         WifiRssi wifiRssi = new WifiRssi();
-        for(int i = 0; i<wifiList.size(); i++)
-        {
+        for (int i = 0; i < wifiList.size(); i++) {
             wifiRssi = wifiList.get(i);
-            if (wifiRssi.getMacValue().equals(mac))
-            {
+            if (wifiRssi.getMacValue().equals(mac)) {
                 break;
             }
         }

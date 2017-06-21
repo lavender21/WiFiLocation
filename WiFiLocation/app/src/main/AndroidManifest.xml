@@ -3,14 +3,15 @@
     package="com.example.lavender.wifilocation">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--WIFI-->
+    <!-- WIFI -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!--GPS-->
+    <!-- GPS -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <uses-feature android:name="android.hardware.location.gps" />
 
     <application
@@ -45,7 +46,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".GetStepLengthActivity"/>
+        <activity android:name=".GetStepLengthActivity" />
+        <activity android:name=".TestActivity"></activity>
     </application>
 
 </manifest>

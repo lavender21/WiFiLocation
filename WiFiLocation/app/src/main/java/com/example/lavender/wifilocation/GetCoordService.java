@@ -26,7 +26,7 @@ public class GetCoordService extends Service implements SensorEventListener {
     // 窗口大小
     private static final int WINDOWSIZE = 24;
     // 正常人步长 50cm
-    private  static final int STEP = 50;
+    private  static final int STEP = 55;
     // 初始坐标  上一点坐标  当前坐标  单位cm
     private int[] coordInit = {0,0,0};
     private int[] coordThis = {0,0,0};
@@ -78,8 +78,7 @@ public class GetCoordService extends Service implements SensorEventListener {
         // 停止检测步数
         unregisterDetector();
         Toast.makeText(this,"采集完毕",Toast.LENGTH_SHORT).show();
-        sendStepCount();
-        SetCoordZero();
+        //sendStepCount();
         super.onDestroy();
     }
 
@@ -281,17 +280,17 @@ public class GetCoordService extends Service implements SensorEventListener {
 
         synchronized (this) {
             // 判断传感器类型
-            if (sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+            if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 //            	Log.d(TAG, "TYPE_ACCELEROMETER");
                 // 加速度传感器
                 acc50 = event.values.clone();
-            }else if(sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
+            } else if (sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
                 magn50 = event.values.clone();
             }
             float[] R = new float[9];
             SensorManager.getRotationMatrix(R, null, acc50, magn50);
             SensorManager.getOrientation(R, ori50);
-            ori50[0] = (float)Math.toDegrees(ori50[0]);
+            ori50[0] = (float) Math.toDegrees(ori50[0]);
             Log.d("MainActivity", "value[0] is " + Math.toDegrees(ori50[0]));
         }
     }
@@ -315,63 +314,14 @@ public class GetCoordService extends Service implements SensorEventListener {
         // 前进一步的举例
         int frontLength = 0;
         frontLength = STEP * stepDisplayer.getmCount();
-        GetCoord(frontLength,ori50[0]);
         Intent intent = new Intent();
         intent.setAction("sensorData");
-        intent.putExtra("coordThis",coordThis);
+     /*   intent.putExtra("coordThis",coordThis);
         intent.putExtra("coordPre",coordPre);
         intent.putExtra("xlen",tempx);
-        intent.putExtra("ylen",tempy);
-        intent.putExtra("degree",ori50[0]);
+        intent.putExtra("ylen",tempy);*/
+        intent.putExtra("degree0",ori50[0]);
+        intent.putExtra("step",stepDisplayer.getmCount());
         sendBroadcast(intent);
     }
-    private int tempx = 0,tempy = 0;
-    //   获取传感数据，计算坐标
-    private  void GetCoord(int len,float degree){
-        int[] coord = new int[3];
-        coord[0] = (int)(len * Math.sin(degree));
-        coord[1] = (int)(len * Math.cos(degree));
-        coord[2] = 0;
-        tempx = coord[0];
-        tempy = coord[1];
-
-        if (IsCoordEqual(coordInit,coordThis))
-        {
-            coordThis = CoordAdd(coordInit, coord);
-        }else
-        {
-            int[] temp = coordPre;
-            coordPre =coordThis;
-            coordThis = CoordAdd(temp, coord);
-        }
-    }
-
-    // 坐标相加
-    private int[] CoordAdd(int[] coord1, int[] coord2){
-        int[] result = new int[3];
-        result[0] = coord1[0] + coord2[0];
-        result[1] = coord1[1] + coord2[1];
-        result[2] = coord1[2] + coord2[2];
-        return result;
-    }
-    // 判断坐标相等
-    private boolean IsCoordEqual(int[] coord1, int[] coord2){
-        boolean flag= false;
-        if (coord1[0] == coord2[0] && coord1[1] == coord2[1] && coord1[2] == coord2[2])
-            flag = true;
-        else
-            flag = false;
-        return flag;
-    }
-
-    // 坐标清零
-    private void SetCoordZero(){
-        for(int i=0;i<3;i++){
-            coordInit[i] = 0;
-            coordPre[i] = 0;
-            coordThis[i] = 0;
-        }
-    }
-
-
 }
