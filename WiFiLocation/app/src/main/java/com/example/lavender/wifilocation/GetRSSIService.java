@@ -125,8 +125,7 @@ public class GetRSSIService extends Service {
                 e.printStackTrace();
             }
         }
-/*        Gson gson = new Gson();
-        String data = gson.toJson(json);*/
+
         Intent intent = new Intent();
         intent.setAction("apData");
         intent.putExtra("ap", sendToServerData.toString());
@@ -144,6 +143,4 @@ public class GetRSSIService extends Service {
         }
         return wifiRssi;
     }
-
-
 }

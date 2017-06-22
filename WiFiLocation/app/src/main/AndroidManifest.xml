@@ -39,7 +39,6 @@
 
         <activity android:name=".SensorTestActivity" />
         <activity android:name=".GetRssiActivity" />
-        <activity android:name=".MainActivity" />
 
         <service
             android:name=".GetLocationService"
@@ -47,7 +46,6 @@
             android:exported="true" />
 
         <activity android:name=".GetStepLengthActivity" />
-        <activity android:name=".TestActivity"></activity>
     </application>
 
 </manifest>

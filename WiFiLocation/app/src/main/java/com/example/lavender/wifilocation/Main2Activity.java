@@ -1,6 +1,5 @@
 package com.example.lavender.wifilocation;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,9 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,27 +18,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Dictionary;
-
-import static android.app.PendingIntent.getActivity;
 import static com.example.lavender.wifilocation.Common.toJson;
 
-
 public class Main2Activity extends AppCompatActivity implements View.OnClickListener {
-    private Button btnLocation, btnScan, btnCollection,btnWalkCollection,btnSetBaseData,btnTest;
+    private Button btnLocation, btnScan, btnCollection, btnWalkCollection, btnSetBaseData, btnTest;
     private String apData;
-    private TextView showData, txtCoord, txtRoom,txtAlgorithm,txtStepLength;
+    private TextView showData, txtCoord, txtRoom, txtAlgorithm, txtStepLength;
     private EditText edtActualCoord;
     private Spinner spinner, spinnerAlgorithm;
     private String room_id, algorithm;
     private Paint paint = new Paint();
     private Canvas canvas = new Canvas();
-
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -56,8 +47,6 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         init();
-        initMap();
-        drawMap();
         registerReceiver(receiver, new IntentFilter("apData"));
     }
 
@@ -68,8 +57,6 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     }
 
     private void init() {
-        //btnTest = (Button)findViewById(R.id.btnTest);
-        //btnTest.setOnClickListener(this);
         btnLocation = (Button) findViewById(R.id.btnLocation);
         btnLocation.setOnClickListener(this);
         btnLocation.setEnabled(false);
@@ -77,22 +64,19 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         btnScan.setOnClickListener(this);
         btnCollection = (Button) findViewById(R.id.btnCollection);
         btnCollection.setOnClickListener(this);
-        btnWalkCollection = (Button)findViewById(R.id.btnWalkCollection);
+        btnWalkCollection = (Button) findViewById(R.id.btnWalkCollection);
         btnWalkCollection.setOnClickListener(this);
-        btnSetBaseData = (Button)findViewById(R.id.btnSetBaseData);
+        btnSetBaseData = (Button) findViewById(R.id.btnSetBaseData);
         btnSetBaseData.setOnClickListener(this);
         showData = (TextView) findViewById(R.id.showRssiData);
         txtCoord = (TextView) findViewById(R.id.textCoord);
         txtRoom = (TextView) findViewById(R.id.txtRoom);
-        txtAlgorithm = (TextView)findViewById(R.id.txtAlgorithm);
-        txtStepLength = (TextView)findViewById(R.id.txtStepLength);
-        SharedPreferences sharedPreferences = getSharedPreferences("wifiLocationData",MODE_PRIVATE);
-        if (sharedPreferences.contains("stepLength"))
-        {
-            txtStepLength.setText(txtStepLength.getText()+sharedPreferences.getString("stepLength",""));
-        }
-        else
-        {
+        txtAlgorithm = (TextView) findViewById(R.id.txtAlgorithm);
+        txtStepLength = (TextView) findViewById(R.id.txtStepLength);
+        SharedPreferences sharedPreferences = getSharedPreferences("wifiLocationData", MODE_PRIVATE);
+        if (sharedPreferences.contains("stepLength")) {
+            txtStepLength.setText(txtStepLength.getText() + sharedPreferences.getString("stepLength", ""));
+        } else {
             alertMessage();
         }
         edtActualCoord = (EditText) findViewById(R.id.edtActualCoord);
@@ -135,7 +119,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intentStep = new Intent(Main2Activity.this,GetStepLengthActivity.class);
+                Intent intentStep = new Intent(Main2Activity.this, GetStepLengthActivity.class);
                 startActivity(intentStep);
             }
         });
@@ -171,10 +155,6 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                 Intent intent3 = new Intent(Main2Activity.this, GetStepLengthActivity.class);
                 startActivity(intent3);
                 break;
-           /* case R.id.btnTest:
-                Intent intent4 = new Intent(Main2Activity.this,TestActivity.class);
-                startActivity(intent4);
-                break;*/
         }
     }
 
@@ -185,7 +165,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         JSONObject json = new JSONObject();
         try {
             json.put("room_id", room_id);
-            json.put("mobile_id",Common.getMobileModel());
+            json.put("mobile_id", Common.getMobileModel());
             json.put("actual_coord", edtActualCoord.getText());
             json.put("algorithm", algorithm);
             json.put("ap", toJson(apData));
@@ -200,12 +180,5 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             }
         });
         http.execute("POST", http.LOCATION, json.toString());
-    }
-
-    private void initMap(){
-
-    }
-
-    private void drawMap(){
     }
 }

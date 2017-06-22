@@ -3,8 +3,6 @@ package com.example.lavender.wifilocation;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
-
 /**
  * Created by lavender on 2017/3/29.
  * wifi信号强度对象，用来存放扫描到的wifi对象的mac地址和rssi，并且对获取的rssi求平均，组合成数据接口需要的格式。
@@ -18,33 +16,26 @@ public class WifiRssi {
     private int Size = 0;                // rssi数组的下标
 
     // 设置mac值
-    public void setMacValue(String s)
-    {
+    public void setMacValue(String s) {
         this.mac = s;
     }
 
     // 获取mac值
-    public String getMacValue()
-    {
+    public String getMacValue() {
         return mac;
     }
 
     // 获取rssi平均值
-    public int getArgRssi()
-    {
+    public int getArgRssi() {
         return this.argRssi;
     }
 
     // rssi数组添加值
-    public boolean addRssi(int rssi)
-    {
-        if(this.Size < MAX)
-        {
+    public boolean addRssi(int rssi) {
+        if (this.Size < MAX) {
             this.rssi[this.Size++] = rssi;
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
@@ -63,15 +54,13 @@ public class WifiRssi {
     }
 
     //  将mac和argrssi组成接口所需格式 例如：[23,"ad:aa:2d:d1:2d:3b"]
-    public JSONObject getApiFormat()
-    {
+    public JSONObject getApiFormat() {
         JSONObject json = new JSONObject();
         try {
-            json.put("rssi",this.argRssi);
-            json.put("mac",this.mac);
+            json.put("rssi", this.argRssi);
+            json.put("mac", this.mac);
             return json;
-        }catch (JSONException e)
-        {
+        } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }

@@ -1,6 +1,5 @@
 package com.example.lavender.wifilocation;
 
-import android.content.SharedPreferences;
 import android.os.Build;
 
 import org.json.JSONException;
@@ -13,8 +12,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * 该类用于一些各个页面都会用到的公共的方法
@@ -34,7 +31,7 @@ public class Common {
             Map.Entry entry = (Map.Entry) iter.next();
             String key = entry.getKey().toString();
             int val = Integer.parseInt(entry.getValue().toString());
-            Pattern reg = Pattern.compile(key,Pattern.CASE_INSENSITIVE);
+            Pattern reg = Pattern.compile(key, Pattern.CASE_INSENSITIVE);
             Matcher matcher = reg.matcher(mobile);
             if (matcher.find()) {
                 num = val;
@@ -44,8 +41,7 @@ public class Common {
     }
 
     // 获取当前时间
-    public static String getNowTime()
-    {
+    public static String getNowTime() {
         Date now = new Date();
         DateFormat df = DateFormat.getDateTimeInstance();
         String nowtime = df.format(now);
@@ -53,13 +49,11 @@ public class Common {
     }
 
     // 将String转换为Json
-    public static JSONObject toJson(String str)
-    {
-        try{
+    public static JSONObject toJson(String str) {
+        try {
             JSONObject json = new JSONObject(str);
             return json;
-        }catch (JSONException e)
-        {
+        } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }

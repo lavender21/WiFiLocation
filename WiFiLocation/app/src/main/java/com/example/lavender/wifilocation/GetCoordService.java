@@ -3,7 +3,6 @@ package com.example.lavender.wifilocation;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -11,7 +10,6 @@ import android.hardware.SensorManager;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
-import com.example.lavender.wifilocation.StepDisplayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +17,17 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /*这个服务用来获取传感器数据并计算位置坐标*/
-
 public class GetCoordService extends Service implements SensorEventListener {
     // 测试标签
     private static final String TAG = "GetCoordService";
     // 窗口大小
     private static final int WINDOWSIZE = 24;
-    // 正常人步长 50cm
-    private  static final int STEP = 55;
+    // 正常人步长 50cm左右，这里定值用于测试
+    private static final int STEP = 55;
     // 初始坐标  上一点坐标  当前坐标  单位cm
-    private int[] coordInit = {0,0,0};
-    private int[] coordThis = {0,0,0};
-    private int[] coordPre = {0,0,0};
+    private int[] coordInit = {0, 0, 0};
+    private int[] coordThis = {0, 0, 0};
+    private int[] coordPre = {0, 0, 0};
     // 步数统计结果显示
     private StepDisplayer stepDisplayer;
     // 传感器管理类
@@ -55,12 +52,12 @@ public class GetCoordService extends Service implements SensorEventListener {
     private PedometerSettings pedometerSettings;
     // 采样数据列表
     private List<Double> gvSample = new ArrayList<>();
+
     @Override
     public void onCreate() {
-//        MainActivity.btnStartCoord.setEnabled(false);
-        Toast.makeText(this,"开始采集",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "开始采集", Toast.LENGTH_SHORT).show();
         //  注册检测器
-        sensorManager=(SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         registerDetector();
         stepDisplayer = new StepDisplayer(pedometerSettings);
         stepDisplayer.setSteps(0);
@@ -77,7 +74,7 @@ public class GetCoordService extends Service implements SensorEventListener {
     public void onDestroy() {
         // 停止检测步数
         unregisterDetector();
-        Toast.makeText(this,"采集完毕",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "采集完毕", Toast.LENGTH_SHORT).show();
         //sendStepCount();
         super.onDestroy();
     }
@@ -86,7 +83,7 @@ public class GetCoordService extends Service implements SensorEventListener {
     private void sendStepCount() {
         Intent intent = new Intent();
         intent.setAction("step");
-        intent.putExtra("stepCount",stepDisplayer.getmCount());
+        intent.putExtra("stepCount", stepDisplayer.getmCount());
         sendBroadcast(intent);
     }
 
@@ -103,12 +100,15 @@ public class GetCoordService extends Service implements SensorEventListener {
     public interface ICallback {
         public void stepsChanged(int value);
     }
+
     // 初始化接口变量
     private ICallback mCallback;
+
     // 自定义事件
     public void registerCallback(ICallback cb) {
         mCallback = cb;
     }
+
     // 从PaceNotifier传递步数到activity（回调方法）
     private StepDisplayer.Listener stepListener = new StepDisplayer.Listener() {
         public void stepsChanged(int value) {
@@ -122,7 +122,7 @@ public class GetCoordService extends Service implements SensorEventListener {
     private void registerDetector() {
         // 获取指定类型的传感器对象（加速度传感器）
         accSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        magnSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD );
+        magnSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         // 将传感器对象和传感器操作类绑定
         // 将Sensor实例与SensorEventListener实例相互绑定，20000microseconds采样一次,即50HZ。
         sensorManager.registerListener(this, accSensor, 20000);
@@ -135,7 +135,7 @@ public class GetCoordService extends Service implements SensorEventListener {
         timer.schedule(new TimerTask() {
             public void run() {
                 synchronized (this) {
-                    for(int i = 0; i < acc20.length; i++){
+                    for (int i = 0; i < acc20.length; i++) {
                         acc20[i] = acc50[i];
                     }
                 }
@@ -147,23 +147,23 @@ public class GetCoordService extends Service implements SensorEventListener {
                 double gv = Math.sqrt(ax + ay + az);
                 // 数据采样
 //            	sample(gv);
-            	/*
+                /*
             	 *  计算各组数据的标准差及相关系数
             	 *  WINDOWSIZE = 24
             	 */
-                if(accList.size() < WINDOWSIZE){
+                if (accList.size() < WINDOWSIZE) {
                     accList.add(gv);
-                }else{
+                } else {
                     double[] standardDeviation = new double[8];
                     double[] correlation = new double[8];
                     // 循环7组计算标准差及相关系数
-                    for(int i = 1; i < 8; i++){
+                    for (int i = 1; i < 8; i++) {
                         // aArray,bArray赋值
-                        double[] aArray = new double[i+5];
-                        double[] bArray = new double[i+5];
-                        for(int j = 0; j < aArray.length; j++){
+                        double[] aArray = new double[i + 5];
+                        double[] bArray = new double[i + 5];
+                        for (int j = 0; j < aArray.length; j++) {
                             aArray[j] = accList.get(j);
-                            bArray[j] = accList.get(j+7);
+                            bArray[j] = accList.get(j + 7);
                         }
                         // 计算bArray的标准差σb
                         standardDeviation[i] = standardDeviation(bArray);
@@ -175,20 +175,20 @@ public class GetCoordService extends Service implements SensorEventListener {
                     Log.d(TAG, "standardDeviation[tag]:" + standardDeviation[tag]);
                     Log.d(TAG, "correlation[tag]:" + correlation[tag]);
                     // 判断是否发生一步
-                    if((standardDeviation[tag] > 0.5) /*&& (correlation[tag] > 0.7)*/){
+                    if ((standardDeviation[tag] > 0.5) /*&& (correlation[tag] > 0.7)*/) {
                         // 获取系统当前时间（毫秒）
-                        end= System.currentTimeMillis();
+                        end = System.currentTimeMillis();
                         // 因为人们的反应速度最快为0.2s，因此当发生动作的时间间隔小与0.2s时，则认为是外界干扰
-                        if(end - start > 500) {
+                        if (end - start > 500) {
                             Log.d(TAG, "step");
                             // 发送通知，步数加一
                             stepDisplayer.onStep();
                             sendMsgAddSetp();
-                            start= end;
+                            start = end;
                         }
                     }
                     // 删除accList的前bLength(tag+5)项，剩余项依次平移至数组前端
-                    accList = removeElements(accList, (tag+5));
+                    accList = removeElements(accList, (tag + 5));
 
                 }
             }
@@ -197,17 +197,17 @@ public class GetCoordService extends Service implements SensorEventListener {
     }
 
     // 计算标准差
-    private double standardDeviation(double[] array){
+    private double standardDeviation(double[] array) {
         double result = 0;
         double sumb = 0;
 
-        for(int m = 0; m < array.length; m++){
+        for (int m = 0; m < array.length; m++) {
             sumb += array[m];
         }
 
         double avgb = sumb / array.length;
         sumb = 0;
-        for(int n = 0; n < array.length; n++){
+        for (int n = 0; n < array.length; n++) {
             sumb += Math.pow((array[n] - avgb), 2);
         }
         result = Math.sqrt(sumb / array.length);
@@ -216,24 +216,24 @@ public class GetCoordService extends Service implements SensorEventListener {
     }
 
     // 计算相关系数
-    private double correlation(double[] aArray, double[] bArray){
+    private double correlation(double[] aArray, double[] bArray) {
         double result = 0;
         double suma = 0;
         double sumb = 0;
         double avga = 0;
         double avgb = 0;
-        double sumUp =0;
-        double sumDown1 =0;
-        double sumDown2 =0;
+        double sumUp = 0;
+        double sumDown1 = 0;
+        double sumDown2 = 0;
 
-        for(int m = 0; m < aArray.length; m++){
+        for (int m = 0; m < aArray.length; m++) {
             suma += aArray[m];
             sumb += bArray[m];
         }
         avga = suma / aArray.length;
         avgb = sumb / bArray.length;
 
-        for(int n = 0; n < aArray.length; n++){
+        for (int n = 0; n < aArray.length; n++) {
             sumUp += (aArray[n] - avga) * (bArray[n] - avgb);
             sumDown1 += Math.pow((aArray[n] - avga), 2);
             sumDown2 += Math.pow((bArray[n] - avgb), 2);
@@ -245,11 +245,11 @@ public class GetCoordService extends Service implements SensorEventListener {
     }
 
     // 返回数组中最大值的下标
-    private int maxTag(double[] correlation){
+    private int maxTag(double[] correlation) {
         int tag = 0;
         correlation[0] = 0;
-        for(int m = 1; m < correlation.length; m++){
-            if(correlation[m] > correlation[m-1]){
+        for (int m = 1; m < correlation.length; m++) {
+            if (correlation[m] > correlation[m - 1]) {
                 tag = m;
             }
         }
@@ -257,10 +257,10 @@ public class GetCoordService extends Service implements SensorEventListener {
     }
 
     // 移除前number项元素
-    private List<Double> removeElements(List<Double> list, int number){
+    private List<Double> removeElements(List<Double> list, int number) {
         List<Double> result = new ArrayList<Double>();
 
-        for(int m = number; m < list.size(); m++){
+        for (int m = number; m < list.size(); m++) {
             result.add(list.get(m));
         }
         list = null;
@@ -296,32 +296,26 @@ public class GetCoordService extends Service implements SensorEventListener {
     }
 
     @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-        }
+    }
 
     // 注销步数检测服务
     private void unregisterDetector() {
         sensorManager.unregisterListener(this);
         // 停止定时器
-        if(timer != null){
+        if (timer != null) {
             timer.cancel();
         }
     }
 
     // 步数加一
-    private void sendMsgAddSetp(){
+    private void sendMsgAddSetp() {
         // 前进一步的举例
-        int frontLength = 0;
-        frontLength = STEP * stepDisplayer.getmCount();
         Intent intent = new Intent();
         intent.setAction("sensorData");
-     /*   intent.putExtra("coordThis",coordThis);
-        intent.putExtra("coordPre",coordPre);
-        intent.putExtra("xlen",tempx);
-        intent.putExtra("ylen",tempy);*/
-        intent.putExtra("degree0",ori50[0]);
-        intent.putExtra("step",stepDisplayer.getmCount());
+        intent.putExtra("degree0", ori50[0]);
+        intent.putExtra("step", stepDisplayer.getmCount());
         sendBroadcast(intent);
     }
 }

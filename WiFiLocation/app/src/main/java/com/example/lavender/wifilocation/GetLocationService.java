@@ -1,20 +1,16 @@
 package com.example.lavender.wifilocation;
 
-import android.app.AlertDialog;
 import android.app.Service;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
-public class GetLocationService extends Service implements LocationListener{
+public class GetLocationService extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
@@ -59,7 +55,6 @@ public class GetLocationService extends Service implements LocationListener{
     // Declaring a Location Manager
     protected LocationManager locationManager;
 
-
     public GetLocationService() {
 
     }
@@ -67,7 +62,7 @@ public class GetLocationService extends Service implements LocationListener{
     @Override
     public void onCreate() {
         super.onCreate();
-        Toast.makeText(this,"开始采集",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "开始采集", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -82,17 +77,18 @@ public class GetLocationService extends Service implements LocationListener{
     public void onDestroy() {
         getLocation();
         sendData();
-        Toast.makeText(this,"结束采集",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "结束采集", Toast.LENGTH_SHORT).show();
         super.onDestroy();
     }
 
+    // 发送经纬度数据给activity
     private void sendData() {
         Intent intent = new Intent();
         intent.setAction("gps");
-        intent.putExtra("startLatitude",preLatitude);
-        intent.putExtra("startLongitude",preLongitude);
-        intent.putExtra("endLongitude",longitude);
-        intent.putExtra("endLatitude",latitude);
+        intent.putExtra("startLatitude", preLatitude);
+        intent.putExtra("startLongitude", preLongitude);
+        intent.putExtra("endLongitude", longitude);
+        intent.putExtra("endLatitude", latitude);
         sendBroadcast(intent);
     }
 
@@ -102,6 +98,7 @@ public class GetLocationService extends Service implements LocationListener{
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    // 获取位置信息
     public Location getLocation() {
         try {
             locationManager = (LocationManager) this
@@ -164,9 +161,9 @@ public class GetLocationService extends Service implements LocationListener{
 
     /**
      * Function to get latitude
-     * */
-    public double getLatitude(){
-        if(location != null){
+     */
+    public double getLatitude() {
+        if (location != null) {
             latitude = location.getLatitude();
         }
 
@@ -176,9 +173,9 @@ public class GetLocationService extends Service implements LocationListener{
 
     /**
      * Function to get longitude
-     * */
-    public double getLongitude(){
-        if(location != null){
+     */
+    public double getLongitude() {
+        if (location != null) {
             longitude = location.getLongitude();
         }
 
@@ -188,8 +185,9 @@ public class GetLocationService extends Service implements LocationListener{
 
     /**
      * Function to check if best network provider
+     *
      * @return boolean
-     * */
+     */
     public boolean canGetLocation() {
         return this.canGetLocation;
     }

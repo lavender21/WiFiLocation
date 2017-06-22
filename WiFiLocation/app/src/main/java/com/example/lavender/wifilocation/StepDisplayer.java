@@ -2,9 +2,8 @@ package com.example.lavender.wifilocation;
 
 import java.util.ArrayList;
 
-
 public class StepDisplayer {
-	// 步数变量
+    // 步数变量
     private int mCount = 0;
     // 应用设置
     PedometerSettings mSettings;
@@ -15,7 +14,7 @@ public class StepDisplayer {
         notifyListener();
     }
 
-    public int getmCount(){
+    public int getmCount() {
         return mCount;
     }
 
@@ -23,28 +22,30 @@ public class StepDisplayer {
         mCount = steps;
         notifyListener();
     }
+
     public void onStep() {
-        mCount ++;
+        mCount++;
         notifyListener();
     }
+
     public void reloadSettings() {
         notifyListener();
     }
-    
+
     public interface Listener {
         public void stepsChanged(int value);
     }
-    
+
     private ArrayList<Listener> mListeners = new ArrayList<Listener>();
 
     public void addListener(Listener l) {
         mListeners.add(l);
     }
-    
+
     public void notifyListener() {
         for (Listener listener : mListeners) {
-            listener.stepsChanged((int)mCount);
+            listener.stepsChanged((int) mCount);
         }
     }
-    
+
 }
