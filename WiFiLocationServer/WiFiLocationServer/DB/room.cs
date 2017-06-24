@@ -28,7 +28,6 @@ namespace WiFiLocationServer.DB
             return DbHelperSQL.Exists(strSql.ToString(), parameters);
         }
 
-
         /// <summary>
         /// 增加一条数据
         /// </summary>
