@@ -245,17 +245,7 @@ HttpResponseMessage
 }
 ```
 
-### 界面展示
-#### app
-离线采集页面：
-![enter description here][1]
-  
-  定位页面：
-  ![enter description here][2]
-  
-  #### server
-  定位统计分析页面：
-![enter description here][3]
+
 
 
   [1]: ./image/collection.png "collection.png"
